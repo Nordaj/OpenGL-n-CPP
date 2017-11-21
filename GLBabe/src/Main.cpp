@@ -111,7 +111,7 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ind), &ind, GL_STATIC_DRAW);
 
 	//Get shaders
-	Shaders shaders = GrabShader("src/Shaders/Unlit.shader");
+	Shaders shaders = GrabShader("resources/Shaders/Unlit.shader");
 
 	//Create shaders
 	unsigned int shader = CreateShader(shaders.Vertex, shaders.Fragment); 
