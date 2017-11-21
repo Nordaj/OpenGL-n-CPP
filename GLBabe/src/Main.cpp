@@ -112,8 +112,6 @@ int main()
 
 	//Get shaders
 	Shaders shaders = GrabShader("src/Shaders/Unlit.shader");
-	std::cout << shaders.Fragment << std::endl;
-	std::cout << shaders.Vertex << std::endl;
 
 	//Create shaders
 	unsigned int shader = CreateShader(shaders.Vertex, shaders.Fragment); 
