@@ -1,0 +1,7 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(372,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(373,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Main.cpp
+d:\documents\visual studio 2017\projects\glbabe\glbabe\src\main.cpp(152): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\documents\visual studio 2017\projects\glbabe\glbabe\src\main.cpp(214): warning C4715: 'Setup': not all control paths return a value
+  GLBabe.vcxproj -> d:\Documents\Visual Studio 2017\Projects\GLBabe\bin\x64Debug\GLBabe.exe
+  GLBabe.vcxproj -> d:\Documents\Visual Studio 2017\Projects\GLBabe\bin\x64Debug\GLBabe.pdb (Partial PDB)
