@@ -47,16 +47,42 @@ int main()
 
 	//Cube
 	float pts[] = {
-		//Positions           //Colors           //Tex coords
-		-0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  0.0f, 0.0f,   //0
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f, 0.0f,   //1
-		 0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,   //2
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f,   //3
+		//Positions           //Colors           //Tex coord  //Normals
+		//Front
+		-0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  0.0f, 0.0f,  0.0f,  0.0f,  1.0f, //0
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f,  0.0f,  1.0f, //1
+		 0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,  0.0f,  0.0f,  1.0f, //2
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f,  0.0f,  0.0f,  1.0f, //3
 
-		-0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  1.0f, 1.0f,   //4
-		 0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f,   //5
-		 0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f,   //6
-		-0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  1.0f, 0.0f	   //7
+		//Back
+		-0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f, //4
+		 0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f,  0.0f,  0.0f, -1.0f, //5
+		 0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f, //6
+		-0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f,  0.0f, -1.0f, //7
+
+		//Right
+		 0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  0.0f, 0.0f,  1.0f,  0.0f,  0.0f, //8
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  1.0f,  0.0f,  0.0f, //9
+		 0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,  1.0f,  0.0f,  0.0f, //10
+		 0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f,  1.0f,  0.0f,  0.0f, //11
+
+		//Left
+		-0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f, //12
+		-0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f, //13
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f, //14
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f, //15
+
+		//Top
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f, //16
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f, //17
+		 0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,  0.0f,  1.0f,  0.0f, //18
+		-0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f, //19
+
+		//Bottom
+		-0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  0.0f, 0.0f,  0.0f, -1.0f,  0.0f, //20
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f, //21
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,  0.0f, -1.0f,  0.0f, //22
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f,  0.0f, -1.0f,  0.0f  //23
 	};
 
 	//Elements to use for triangles
@@ -67,23 +93,29 @@ int main()
 
 	//Elements to use for cube
 	unsigned int ind[] = {
+		//Front
 		0, 1, 2,
 		2, 3, 0,
 
+		//Back
 		4, 5, 6,
 		6, 7, 4,
 
-		1, 5, 6,
-		6, 2, 1,
+		//Right
+		8, 9, 10,
+		10, 11, 8,
 
-		0, 4, 5,
-		5, 1, 0,
+		//Left
+		12, 13, 14,
+		14, 15, 12,
 
-		0, 4, 7,
-		7, 3, 0,
+		//Top
+		16, 17, 18,
+		18, 19, 16,
 
-		3, 7, 6,
-		6, 2, 3
+		//Bottom
+		20, 21, 22,
+		22, 23, 20,
 	};
 	
 	//Crate vertex buffer (generate buffer, bind buffer, give desc)
@@ -93,16 +125,20 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(pts), &pts, GL_STATIC_DRAW);
 	
 	//Position attrubute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 11, 0);
 	glEnableVertexAttribArray(0);
 
 	//Color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*) (sizeof(float) * 3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 11, (void*) (sizeof(float) * 3));
 	glEnableVertexAttribArray(1);
 
 	//Texture coordinate attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(sizeof(float) * 6));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 11, (void*)(sizeof(float) * 6));
 	glEnableVertexAttribArray(2);
+
+	//Texture coordinate attribute
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 11, (void*)(sizeof(float) * 8));
+	glEnableVertexAttribArray(3);
 
 	//Create index buffer object (generate buffer, bind buffer, give desc)
 	unsigned int ibo;
@@ -116,6 +152,14 @@ int main()
 	//Create shaders
 	unsigned int shader = CreateShader(shaders.Vertex, shaders.Fragment); 
 	glUseProgram(shader);
+
+	//Assign uniform ambient color
+	int col = glGetUniformLocation(shader, "ambient");
+	glUniform3fv(col, 1, &ambientLight.x);
+
+	//Give the pos of my light
+	int c = glGetUniformLocation(shader, "lightPos");
+	glUniform3fv(c, 1, &lightPos.x);
 
 	//Wireframe mode
 	if (WIREFRAMEMODE)
@@ -152,12 +196,20 @@ int main()
 
 		for (int i = 0; i < sizeof(cubes) / sizeof(Transform); i++)
 		{
+			//Rotate cubes
+			cubes[i].Rotate(glm::vec3(1, 1, 0), 0.6f);
+
 			//Model matrix
 			glm::mat4 model = cubes[i].GetMatrix();
 
+			//Give model matrix
+			int mo = glGetUniformLocation(shader, "model");
+			glUniformMatrix4fv(mo, 1, GL_FALSE, glm::value_ptr(model));
+
 			//View matrix
 			glm::mat4 view = glm::mat4(1.0f);
-			view = glm::lookAt(camPos, camPos + camFront, camUp);
+			//view = glm::lookAt(camPos, camPos + camFront, camUp);
+			view = glm::lookAt(camPos, glm::vec3(0.0f, 0.0f, -3.0f), camUp);
 			//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
 			//Projection matrix
