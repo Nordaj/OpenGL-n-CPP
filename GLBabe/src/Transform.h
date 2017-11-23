@@ -1,6 +1,7 @@
 #pragma once
 
-class Transform {
+class Transform 
+{
 public:
 	Transform();
 	Transform(glm::vec3 pos);
