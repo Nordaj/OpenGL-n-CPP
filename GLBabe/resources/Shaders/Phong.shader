@@ -52,14 +52,29 @@ uniform float uSpecularity;
 
 void main()
 {
-	//Direction
+	//Use for all
 	vec3 normal = normalize(iNormal);
-	vec3 dir = normalize(-uDLightDirection);
-	float intensity = dot(dir, normal);
-	vec4 fDIR = vec4(uDLightColor * (intensity * uDLightIntensity), 1.0);
 
-	//TODO: Mix the last point light + specular with this directional
+	//Ambient
+	vec3 ambCol = uAmbient * texture(uTex, iTextureCoord).rgb;
+
+	//Direction
+	vec3 dir = normalize(-uDLightDirection);
+	float dirIntensity = dot(dir, normal);
+	if (dirIntensity < 0) dirIntensity = 0;
+	vec3 dirCol = uDLightColor * (dirIntensity * uDLightIntensity) * texture(uTex, iTextureCoord).rgb;
+
+	//Specular
+	vec3 viewDir = normalize(uCamPos - iFragPos);
+	vec3 refDir = reflect(-dir, normal);
+	float specIntensity = dot(viewDir, refDir);
+	if (specIntensity < 0) specIntensity = 0;
+	specIntensity = pow(specIntensity, uSpecularity);
+	vec3 specCol = specIntensity * texture(uTex, iTextureCoord).rgb;
+
+	//Calc result
+	vec4 result = vec4(ambCol + dirCol + specCol, 1.0);
 
 	//Output
-	color = fDIR;
+	color = result;
 }

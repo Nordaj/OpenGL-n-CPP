@@ -68,6 +68,12 @@ int main()
 		Transform(glm::vec3( 1, -1, -1))
 	};
 
+	//Rotate each cube individually
+	cubes[0].Rotate(glm::vec3(0.3f, 0.7f, 0), 68);
+	cubes[2].Rotate(glm::vec3(0.123f, 0.65f, 0.2f), 32);
+	cubes[5].Rotate(glm::vec3(0.5f, 0.93f, 0), 164);
+	cubes[6].Rotate(glm::vec3(0.1f, 0.9f, 0.8f), 70);
+
 	//Light stuff
 	PointLight light = PointLight(glm::vec3(0, 0, 0), glm::vec3(1, 0, 1), 0.6f);
 	light.PassAll(shader, "uLightPos", "uLightColor", "uLightIntensity");
@@ -78,7 +84,7 @@ int main()
 	uniform float uDLightIntensity;
 	*/
 
-	DirectionalLight dLight = DirectionalLight(glm::vec3(-1, 0.7f, 0), glm::vec3(1, 0, 0), 0.9f);
+	DirectionalLight dLight = DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 1, 1), 0.4f);
 	dLight.PassAll(shader, "uDLightDirection", "uDLightColor", "uDLightIntensity");
 
 	//Create camera
@@ -98,11 +104,11 @@ int main()
 		//Pass cam pos to shader
 		PassV3(shader, "uCamPos", camera.position);
 
+		//Rotate cube[3]
+		cubes[3].Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 1);
+
 		for (int i = 0; i < sizeof(cubes) / sizeof(Transform); i++)
 		{
-			//Rotate cubes
-			cubes[i].Rotate(glm::vec3(1, 1, 0), 0.6f);
-
 			//MVP Matrix
 			glm::mat4 model = cubes[i].GetMatrix();
 			glm::mat4 view = camera.GetView();
