@@ -5,22 +5,8 @@
 
 Light::Light()
 {
-	position = glm::vec3(0, 0, 0);
 	color = glm::vec3(1, 0, 0);
 	intensity = 1;
-}
-
-Light::Light(glm::vec3 Position, glm::vec3 Color, float Intensity)
-{
-	position = Position;
-	color = Color;
-	intensity = Intensity;
-}
-
-void Light::PassPosition(unsigned int shader, const char* name)
-{
-	int pos = glGetUniformLocation(shader, name);
-	glUniform3f(pos, position.x, position.y, position.z);
 }
 
 void Light::PassColor(unsigned int shader, const char* name)

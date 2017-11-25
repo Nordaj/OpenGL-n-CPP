@@ -141,24 +141,31 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\DirectionalLight.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\PointLight.cpp" />
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\UniformHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Cube.h" />
+    <ClInclude Include="src\DirectionalLight.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Main.h" />
+    <ClInclude Include="src\PointLight.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\UniformHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\Diffuse.png" />
     <Image Include="resources\Jordy.jpg" />
+    <Image Include="resources\Specular.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\Shaders\Phong.shader" />
     <None Include="src\Shaders\Unlit.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

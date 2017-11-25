@@ -36,38 +36,30 @@ in vec3 iNormal;
 in vec3 iFragPos;
 
 uniform sampler2D uTex;
+
 uniform vec3 uAmbient;
+
 uniform vec3 uLightPos;
 uniform vec3 uLightColor;
 uniform float uLightIntensity;
+
+uniform vec3 uDLightDirection;
+uniform vec3 uDLightColor;
+uniform float uDLightIntensity;
+
 uniform vec3 uCamPos;
 uniform float uSpecularity;
 
 void main()
 {
-	//TODO: calc dist and multiply that by intensity to get area light
-
-	//Diffuse
+	//Direction
 	vec3 normal = normalize(iNormal);
-	vec3 lightDirection = normalize(uLightPos - iFragPos);
-	float dif = dot(normal, lightDirection);
-	if (dif < 0) dif = 0;
+	vec3 dir = normalize(-uDLightDirection);
+	float intensity = dot(dir, normal);
+	vec4 fDIR = vec4(uDLightColor * (intensity * uDLightIntensity), 1.0);
 
-	//Specular
-	vec3 viewDirection = normalize(uCamPos - iFragPos);
-	vec3 reflection = reflect(-lightDirection, iNormal);
-	float spec = dot(viewDirection, reflection);
-	if (spec < 0) spec = 0;
-	spec = pow(spec, uSpecularity);
-
-	//Calculate simple brightness float
-	float brightness = (dif + spec) * uLightIntensity;
-
-	//Calculate color
-	vec4 col = vec4(uLightColor.r, uLightColor.g, uLightColor.b, 1.0) * brightness;
-	col += vec4(uAmbient, 1.0);
-	col *= texture(uTex, iTextureCoord);
+	//TODO: Mix the last point light + specular with this directional
 
 	//Output
-	color = col;
+	color = fDIR;
 }

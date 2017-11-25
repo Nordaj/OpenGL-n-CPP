@@ -11,6 +11,8 @@
 #include "Main.h"
 #include "Transform.h"
 #include "Light.h"
+#include "PointLight.h"
+#include "DirectionalLight.h"
 #include "Cube.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -24,15 +26,16 @@ int main()
 	//Load texture
 	int width, height, channels;
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char *data = stbi_load("resources/Jordy.jpg", &width, &height, &channels, 0);
+	unsigned char *data = stbi_load("resources/Diffuse.png", &width, &height, &channels, 0);
 
 	//Bind texture
 	unsigned int tex;
-	glGenTextures(1, &tex);
+	glGenTextures(1, &tex); 
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tex);
 
 	//Give texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	//Free stbi memory
@@ -66,10 +69,17 @@ int main()
 	};
 
 	//Light stuff
-	Light light = Light(glm::vec3(0, 0, 0), glm::vec3(1, 0, 1), 1);
-	light.PassPosition(shader, "uLightPos");
-	light.PassColor(shader, "uLightColor");
-	light.PassIntensity(shader, "uLightIntensity");
+	PointLight light = PointLight(glm::vec3(0, 0, 0), glm::vec3(1, 0, 1), 0.6f);
+	light.PassAll(shader, "uLightPos", "uLightColor", "uLightIntensity");
+
+	/*
+	uniform vec3 uDLightDirection;
+	uniform vec3 uDLightColor;
+	uniform float uDLightIntensity;
+	*/
+
+	DirectionalLight dLight = DirectionalLight(glm::vec3(-1, 0.7f, 0), glm::vec3(1, 0, 0), 0.9f);
+	dLight.PassAll(shader, "uDLightDirection", "uDLightColor", "uDLightIntensity");
 
 	//Create camera
 	Camera camera = Camera();
