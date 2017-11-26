@@ -4,7 +4,7 @@
 #include <string>
 #include <glew.h>
 #include <glfw3.h>
-#include <stb_image.h>
+//#include <stb_image.h>
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
@@ -17,29 +17,18 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "UniformHandler.h"
+#include "Texture.h"
 
 int main()
 {
 	//Setup Game
 	if (Setup()) return 0;
 
-	//Load texture
-	int width, height, channels;
-	stbi_set_flip_vertically_on_load(true);
-	unsigned char *data = stbi_load("resources/Diffuse.png", &width, &height, &channels, 0);
-
-	//Bind texture
-	unsigned int tex;
-	glGenTextures(1, &tex); 
+	//Load Diffuse Tex
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex);
-
-	//Give texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	//Free stbi memory
-	stbi_image_free(data);
+	EasyLoad("resources/Diffuse.png", true, false);
+	//glActiveTexture(GL_TEXTURE1);
+	//EasyLoad("resources/Specular.png", true, false);
 
 	//Handles vertex array, indicies, vbo, ibo, and vertex attributes
 	int indLength = SetupCube();
