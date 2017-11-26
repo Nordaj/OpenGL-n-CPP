@@ -4,10 +4,10 @@
 #include <string>
 #include <glew.h>
 #include <glfw3.h>
-//#include <stb_image.h>
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
+
 #include "Main.h"
 
 int main()
@@ -71,6 +71,9 @@ int main()
 	//Main loop
 	while (!glfwWindowShouldClose(window))
 	{
+		//Get start time
+		frameStartTime = glfwGetTime();
+
 		//Clear buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -82,7 +85,7 @@ int main()
 		PassV3(shader, "uCamPos", mainCamera.position);
 
 		//Rotate cube[3]
-		cubes[3].Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 1);
+		cubes[3].Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 100 * deltaTime);
 
 		for (int i = 0; i < sizeof(cubes) / sizeof(Transform); i++)
 		{
@@ -107,6 +110,9 @@ int main()
 
 		//Poll events
 		glfwPollEvents();
+
+		//Get delta time
+		deltaTime = glfwGetTime() - frameStartTime;
 	}
 
 	//End
@@ -149,6 +155,9 @@ int Setup()
 	//Wireframe mode
 	if (WIREFRAMEMODE)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	//Enable/Disable vsync
+	glfwSwapInterval(VSYNC);
 
 	//Return
 	return 0;

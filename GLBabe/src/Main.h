@@ -13,6 +13,7 @@
 
 //Defines
 #define WIREFRAMEMODE false
+#define VSYNC false
 #define WIDTH 500
 #define HEIGHT 500
 #define WINDOWNAME "Hey"
@@ -23,6 +24,8 @@ Camera mainCamera; //TODO find solution
 glm::vec4 backgroundColor(0.05f, 0.05f, 0.05f, 1.0f);
 glm::vec3 ambientLight = glm::vec3(0.1f, 0.1f, 0.1f);
 float specularity = 0.2f;
+double frameStartTime;
+double deltaTime;
 
 //Functions
 int Setup();
