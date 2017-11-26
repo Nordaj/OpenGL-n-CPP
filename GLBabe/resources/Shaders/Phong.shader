@@ -36,6 +36,7 @@ in vec3 iNormal;
 in vec3 iFragPos;
 
 uniform sampler2D uTex;
+uniform sampler2D uSpec;
 
 uniform vec3 uAmbient;
 
@@ -69,8 +70,9 @@ void main()
 	vec3 refDir = reflect(-dir, normal);
 	float specIntensity = dot(viewDir, refDir);
 	if (specIntensity < 0) specIntensity = 0;
-	specIntensity = pow(specIntensity, uSpecularity);
-	vec3 specCol = specIntensity * texture(uTex, iTextureCoord).rgb;
+	specIntensity = pow(specIntensity, 32);
+	specIntensity *= uSpecularity;
+	vec3 specCol = specIntensity * texture(uSpec, iTextureCoord).rgb * uDLightColor;
 
 	//Calc result
 	vec4 result = vec4(ambCol + dirCol + specCol, 1.0);

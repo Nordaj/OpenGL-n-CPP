@@ -19,7 +19,7 @@ struct Shaders {
 GLFWwindow *window;
 glm::vec4 backgroundColor(0.05f, 0.05f, 0.05f, 1.0f);
 glm::vec3 ambientLight = glm::vec3(0.1f, 0.1f, 0.1f);
-float specularity = 100;
+float specularity = 0.2f;
 
 //Functions
 int Setup();

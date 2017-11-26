@@ -10,6 +10,12 @@ void PassFloat(int shader, const char* name, float value)
 	glUniform1f(FOO, value);
 }
 
+void PassInt(int shader, const char* name, int value)
+{
+	int FOO = glGetUniformLocation(shader, name);
+	glUniform1i(FOO, value);
+}
+
 void PassV3(int shader, const char* name, glm::vec3 value)
 {
 	int FOO = glGetUniformLocation(shader, name);

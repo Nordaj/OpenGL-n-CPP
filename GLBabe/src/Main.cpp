@@ -24,12 +24,6 @@ int main()
 	//Setup Game
 	if (Setup()) return 0;
 
-	//Load Diffuse Tex
-	glActiveTexture(GL_TEXTURE0);
-	EasyLoad("resources/Diffuse.png", true, false);
-	//glActiveTexture(GL_TEXTURE1);
-	//EasyLoad("resources/Specular.png", true, false);
-
 	//Handles vertex array, indicies, vbo, ibo, and vertex attributes
 	int indLength = SetupCube();
 
@@ -58,27 +52,30 @@ int main()
 	};
 
 	//Rotate each cube individually
-	cubes[0].Rotate(glm::vec3(0.3f, 0.7f, 0), 68);
+	cubes[0].Rotate(glm::vec3(0.2f, 0.9f, 0), 100);
 	cubes[2].Rotate(glm::vec3(0.123f, 0.65f, 0.2f), 32);
 	cubes[5].Rotate(glm::vec3(0.5f, 0.93f, 0), 164);
-	cubes[6].Rotate(glm::vec3(0.1f, 0.9f, 0.8f), 70);
+	cubes[6].Rotate(glm::vec3(0.1f, 0.9f, 0.8f), 63);
 
 	//Light stuff
 	PointLight light = PointLight(glm::vec3(0, 0, 0), glm::vec3(1, 0, 1), 0.6f);
 	light.PassAll(shader, "uLightPos", "uLightColor", "uLightIntensity");
 
-	/*
-	uniform vec3 uDLightDirection;
-	uniform vec3 uDLightColor;
-	uniform float uDLightIntensity;
-	*/
-
-	DirectionalLight dLight = DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 1, 1), 0.4f);
+	DirectionalLight dLight = DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0, 1), 0.4f);
 	dLight.PassAll(shader, "uDLightDirection", "uDLightColor", "uDLightIntensity");
 
 	//Create camera
 	Camera camera = Camera();
 	camera.position.z = 4;
+
+	//Load Diffuse Tex
+	glActiveTexture(GL_TEXTURE0);
+	unsigned int diffuse = EasyLoad("resources/Diffuse.png", true, false);
+	PassInt(shader, "uTex", 0);
+	//Load Specular Tex
+	glActiveTexture(GL_TEXTURE1);
+	unsigned int specular = EasyLoad("resources/Specular.png", true, false);
+	PassInt(shader, "uSpec", 1);
 
 	//Main loop
 	while (!glfwWindowShouldClose(window))
