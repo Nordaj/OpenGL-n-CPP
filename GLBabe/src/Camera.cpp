@@ -52,3 +52,8 @@ glm::mat4 Camera::GetPerspective()
 
 	return projection;
 }
+
+void Camera::UpdateAspect(float Aspect)
+{
+	aspect = Aspect;
+}

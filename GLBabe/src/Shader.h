@@ -1,5 +1,15 @@
 #pragma once
 
+struct Shaders {
+	std::string Vertex;
+	std::string Fragment;
+
+	Shaders(std::string vert, std::string frag)
+		:Vertex(vert), Fragment(frag)
+	{
+	}
+};
+
 static Shaders GrabShader(std::string path)
 {
 	//Get shader, init vars

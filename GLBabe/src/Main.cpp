@@ -9,15 +9,6 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 #include "Main.h"
-#include "Transform.h"
-#include "Light.h"
-#include "PointLight.h"
-#include "DirectionalLight.h"
-#include "Cube.h"
-#include "Shader.h"
-#include "Camera.h"
-#include "UniformHandler.h"
-#include "Texture.h"
 
 int main()
 {
@@ -65,8 +56,8 @@ int main()
 	dLight.PassAll(shader, "uDLightDirection", "uDLightColor", "uDLightIntensity");
 
 	//Create camera
-	Camera camera = Camera();
-	camera.position.z = 4;
+	mainCamera = Camera();
+	mainCamera.position.z = 4;
 
 	//Load Diffuse Tex
 	glActiveTexture(GL_TEXTURE0);
@@ -85,10 +76,10 @@ int main()
 
 		//Move cam for fun
 		float xPos = 3 * sin(glfwGetTime() * 2);
-		camera.position.x = xPos;
+		mainCamera.position.x = xPos;
 
 		//Pass cam pos to shader
-		PassV3(shader, "uCamPos", camera.position);
+		PassV3(shader, "uCamPos", mainCamera.position);
 
 		//Rotate cube[3]
 		cubes[3].Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 1);
@@ -97,8 +88,8 @@ int main()
 		{
 			//MVP Matrix
 			glm::mat4 model = cubes[i].GetMatrix();
-			glm::mat4 view = camera.GetView();
-			glm::mat4 projection = camera.GetPerspective();
+			glm::mat4 view = mainCamera.GetView();
+			glm::mat4 projection = mainCamera.GetPerspective();
 			glm::mat4 MVPMatrix = projection * view * model;
 
 			//Give MVP to shader
@@ -146,6 +137,9 @@ int Setup()
 		return 0;
 	}
 
+	//Set size callback
+	glfwSetWindowSizeCallback(window, WindowSizeUpdate);
+
 	//Clear color
 	glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 
@@ -158,4 +152,10 @@ int Setup()
 
 	//Return
 	return 0;
+}
+
+void WindowSizeUpdate(GLFWwindow *win, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	mainCamera.UpdateAspect((float) width / (float) height);
 }
