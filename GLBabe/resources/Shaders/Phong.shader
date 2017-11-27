@@ -51,32 +51,38 @@ uniform float uDLightIntensity;
 uniform vec3 uCamPos;
 uniform float uSpecularity;
 
+float Attenuation(float constant, float lin, float quadratic, float distance);
+
 void main()
 {
+	//-------------Directional Light-----------------
 	//Use for all
 	vec3 normal = normalize(iNormal);
 
 	//Ambient
-	vec3 ambCol = uAmbient * texture(uTex, iTextureCoord).rgb;
+	vec3 ambCol = uAmbient;
 
 	//Direction
 	vec3 dir = normalize(-uDLightDirection);
 	float dirIntensity = dot(dir, normal);
 	if (dirIntensity < 0) dirIntensity = 0;
-	vec3 dirCol = uDLightColor * (dirIntensity * uDLightIntensity) * texture(uTex, iTextureCoord).rgb;
+	vec3 dirCol = uDLightColor * (dirIntensity * uDLightIntensity);
 
-	//Specular
-	vec3 viewDir = normalize(uCamPos - iFragPos);
-	vec3 refDir = reflect(-dir, normal);
-	float specIntensity = dot(viewDir, refDir);
-	if (specIntensity < 0) specIntensity = 0;
-	specIntensity = pow(specIntensity, 32);
-	specIntensity *= uSpecularity;
-	vec3 specCol = specIntensity * texture(uSpec, iTextureCoord).rgb * uDLightColor;
+	//-------------Point Light----------------- 
+	float distance = length(uLightPos - iFragPos) / uLightIntensity;
+	vec3 ptDir = normalize(uLightPos - iFragPos);
+	float attenuation = Attenuation(1.0, 1, 2, distance);
+	float dotResult = dot(ptDir, normal);
+	vec3 pointLightCol = uLightColor * (attenuation * dotResult);
 
 	//Calc result
-	vec4 result = vec4(ambCol + dirCol + specCol, 1.0);
+	vec4 result = vec4(pointLightCol + dirCol, 1.0);
 
 	//Output
 	color = result;
+}
+
+float Attenuation(float constant, float lin, float quadratic, float distance)
+{
+	return 1.0 / (constant + lin * distance + quadratic * (distance * distance));
 }

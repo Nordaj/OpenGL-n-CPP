@@ -39,7 +39,9 @@ int main()
 		Transform(glm::vec3(-1, -1, -1)),
 		Transform(glm::vec3(-1,  1, -1)),
 		Transform(glm::vec3( 1,  1, -1)),
-		Transform(glm::vec3( 1, -1, -1))
+		Transform(glm::vec3( 1, -1, -1)),
+
+		Transform(glm::vec3( 0, 0, -3))
 	};
 
 	//Rotate each cube individually
@@ -49,10 +51,10 @@ int main()
 	cubes[6].Rotate(glm::vec3(0.1f, 0.9f, 0.8f), 63);
 
 	//Light stuff
-	PointLight light = PointLight(glm::vec3(0, 0, 0), glm::vec3(1, 0, 1), 0.6f);
+	PointLight light = PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 1), 1.0f);
 	light.PassAll(shader, "uLightPos", "uLightColor", "uLightIntensity");
 
-	DirectionalLight dLight = DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0, 1), 0.4f);
+	DirectionalLight dLight = DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0, 0), 0.4f);
 	dLight.PassAll(shader, "uDLightDirection", "uDLightColor", "uDLightIntensity");
 
 	//Create camera
