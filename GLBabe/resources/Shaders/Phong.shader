@@ -35,18 +35,29 @@ in vec2 iTextureCoord;
 in vec3 iNormal;
 in vec3 iFragPos;
 
+struct PointLight {
+	vec3 position;
+	vec3 color;
+	float intensity;
+};
+
+struct DirectionalLight {
+	vec3 direction;
+	vec3 color;
+	float intensity;
+};
+
 uniform sampler2D uTex;
 uniform sampler2D uSpec;
 
 uniform vec3 uAmbient;
 
-uniform vec3 uLightPos;
-uniform vec3 uLightColor;
-uniform float uLightIntensity;
+uniform PointLight pointLight;
 
-uniform vec3 uDLightDirection;
-uniform vec3 uDLightColor;
-uniform float uDLightIntensity;
+//uniform vec3 uDLightDirection;
+//uniform vec3 uDLightColor;
+//uniform float uDLightIntensity;
+uniform DirectionalLight directionalLight;
 
 uniform vec3 uCamPos;
 uniform float uSpecularity;
@@ -65,34 +76,34 @@ void main()
 
 	//-------------Directional Light-----------------
 	//Diffuse
-	vec3 DL_dir = normalize(-uDLightDirection);
+	vec3 DL_dir = normalize(-directionalLight.direction);
 	float DL_dirIntensity = dot(DL_dir, normal);
 	if (DL_dirIntensity < 0) DL_dirIntensity = 0;
-	vec3 DL_difCol = uDLightColor * (DL_dirIntensity * uDLightIntensity);
+	vec3 DL_difCol = directionalLight.color * (DL_dirIntensity * directionalLight.intensity);
 	//Specular
 	vec3 DL_refDir = reflect(-DL_dir, normal);
 	float DL_specIntensity = dot(viewDir, DL_refDir);
 	if (DL_specIntensity < 0) DL_specIntensity = 0;
 	DL_specIntensity = pow(DL_specIntensity, 32);
-	DL_specIntensity *= uSpecularity;
-	vec3 DL_specCol = DL_specIntensity * texture(uSpec, iTextureCoord).rgb * uDLightColor;
+	DL_specIntensity *= uSpecularity * directionalLight.intensity;
+	vec3 DL_specCol = DL_specIntensity * texture(uSpec, iTextureCoord).rgb * directionalLight.color;
 	//Output
 	vec3 dirCol = (DL_difCol + DL_specCol) * texture(uTex, iTextureCoord).rgb;
 
 	//-------------Point Light-----------------------
 	//Diffuse
-	float PL_distance = length(uLightPos - iFragPos) / uLightIntensity;
-	vec3 PL_ptDir = normalize(uLightPos - iFragPos);
+	float PL_distance = length(pointLight.position - iFragPos) / pointLight.intensity;
+	vec3 PL_ptDir = normalize(pointLight.position - iFragPos);
 	float PL_attenuation = Attenuation(1.0, 1, 2, PL_distance);
 	float PL_dotResult = dot(PL_ptDir, normal);
-	vec3 PL_difColor = uLightColor * (PL_attenuation * PL_dotResult);
+	vec3 PL_difColor = pointLight.color * (PL_attenuation * PL_dotResult);
 	//Specular
 	vec3 PL_refDir = reflect(-PL_ptDir, viewDir);
 	float PL_specIntensity = dot(viewDir, PL_refDir);
 	if (PL_specIntensity < 0) PL_specIntensity = 0;
 	PL_specIntensity = pow(PL_specIntensity, 32);
-	PL_specIntensity *= uSpecularity;
-	vec3 PL_specColor = PL_specIntensity * texture(uSpec, iTextureCoord).rgb * uLightColor;
+	PL_specIntensity *= uSpecularity * PL_attenuation;
+	vec3 PL_specColor = PL_specIntensity * texture(uSpec, iTextureCoord).rgb * pointLight.color;
 	//Output
 	vec3 pointLightCol = (PL_difColor + PL_specColor) * texture(uTex, iTextureCoord).rgb;
 

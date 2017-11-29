@@ -19,7 +19,7 @@ int main()
 	int indLength = SetupCube();
 
 	//Assign shader
-	Shaders shaders = GrabShader("resources/Shaders/Phong.shader");
+	Shaders shaders = GrabShader("resources/Shaders/PhongMulti.shader");
 	unsigned int shader = CreateShader(shaders.Vertex, shaders.Fragment); 
 	glUseProgram(shader);
 
@@ -52,11 +52,24 @@ int main()
 	cubes[8].Rotate(glm::vec3(1, 0, 0), 1);
 
 	//Light stuff
-	PointLight light = PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 1), 1.0f);
-	light.PassAll(shader, "uLightPos", "uLightColor", "uLightIntensity");
+	//PointLight light = PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 1), 1.0f);
+	//light.PassAll(shader, "uLightPos", "uLightColor", "uLightIntensity");
+	//light.PassAll(shader, "pointLight.position", "pointLight.color", "pointLight.intensity");
+	//DirectionalLight dLight = DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0, 0), 0.2f);
+	//dLight.PassAll(shader, "directionalLight.direction", "directionalLight.color", "directionalLight.intensity");
 
-	DirectionalLight dLight = DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0, 0), 0.2f);
-	dLight.PassAll(shader, "uDLightDirection", "uDLightColor", "uDLightIntensity");
+	//Updated Light Stuff
+	PointLight pointLights[] = {
+		PointLight(glm::vec3(0, 0, 0), glm::vec3(1, 0, 0), 1.0f),
+		PointLight(glm::vec3(-2, 0, 0), glm::vec3(0, 1, 0), 1.0f)
+	};
+	pointLights[0].PassAll(shader, "pointLight[0].position", "pointLight[0].color", "pointLight[0].intensity");
+	pointLights[1].PassAll(shader, "pointLight[1].position", "pointLight[1].color", "pointLight[1].intensity");
+
+	DirectionalLight directionalLights[] = {
+		DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(0, 0, 1), 0.2f)
+	};
+	directionalLights[0].PassAll(shader, "directionalLight[0].direction", "directionalLight[0].color", "directionalLight[0].intensity");
 
 	//Create camera
 	mainCamera = Camera();
