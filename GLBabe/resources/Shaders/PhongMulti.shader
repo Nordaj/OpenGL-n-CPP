@@ -115,6 +115,7 @@ void main()
 	vec4 result = vec4(pointLightCol + dirCol + ambCol, 1.0);
 
 	//-------------Output----------------------------
+	//color = vec4(uSpecularity, uSpecularity, uSpecularity, 1.0);
 	color = result;
 }
 

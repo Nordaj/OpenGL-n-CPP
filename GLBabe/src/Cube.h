@@ -87,7 +87,7 @@ int SetupCube()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 11, (void*)(sizeof(float) * 6));
 	glEnableVertexAttribArray(2);
 
-	//Texture coordinate attribute
+	//Normals attribute
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 11, (void*)(sizeof(float) * 8));
 	glEnableVertexAttribArray(3);
 

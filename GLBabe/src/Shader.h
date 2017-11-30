@@ -1,5 +1,10 @@
 #pragma once
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+
 struct Shaders {
 	std::string Vertex;
 	std::string Fragment;

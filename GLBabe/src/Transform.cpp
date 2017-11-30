@@ -38,6 +38,11 @@ void Transform::Translate(glm::vec3 translation)
 	position += translation;
 }
 
+void Transform::SetPosition(glm::vec3 Position)
+{
+	position = Position;
+}
+
 void Transform::Rotate(glm::vec3 dir, float amount)
 {
 	rotation = glm::rotate(rotation, glm::radians(amount), dir);
@@ -45,5 +50,10 @@ void Transform::Rotate(glm::vec3 dir, float amount)
 
 void Transform::Scale(glm::vec3 sc)
 {
-	scale += sc;
+	scale *= sc;
+}
+
+void Transform::SetScale(glm::vec3 sc)
+{
+	scale = sc;
 }

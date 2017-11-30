@@ -18,6 +18,7 @@
 #define WIDTH 500
 #define HEIGHT 500
 #define WINDOWNAME "Hey"
+#define DEBUGLIGHTS true
 
 //Variables
 GLFWwindow *window;

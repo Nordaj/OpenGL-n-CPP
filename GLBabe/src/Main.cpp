@@ -26,14 +26,11 @@ int main()
 	glUseProgram(shader);
 
 	//Light Stuff
-	LightManager lightManager = LightManager(shader);
+	LightManager lightManager = LightManager(shader, DEBUGLIGHTS);
 	lightManager.ambientLight = glm::vec3(0.05f, 0.05f, 0.05f);
 	lightManager.directionalLights.push_back(DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0.9f, 0.9f), 0.2f));
 	lightManager.pointLights.push_back(PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0), 1));
-	lightManager.pointLights.push_back(PointLight(glm::vec3(-1, 0, 0), glm::vec3(1, 0, 0), 1));
-
-	//Assign specularity
-	PassFloat(shader, "uSpecularity", specularity);
+	lightManager.pointLights.push_back(PointLight(glm::vec3(-2, 0, 0), glm::vec3(1, 0, 0), 1));
 
 	//Object's transform
 	Transform cubes[] = {
@@ -64,11 +61,10 @@ int main()
 	//Load Diffuse Tex
 	glActiveTexture(GL_TEXTURE0);
 	unsigned int diffuse = EasyLoad("resources/Diffuse.png", true, false);
-	PassInt(shader, "uTex", 0);
+
 	//Load Specular Tex
 	glActiveTexture(GL_TEXTURE1);
 	unsigned int specular = EasyLoad("resources/Specular.png", true, false);
-	PassInt(shader, "uSpec", 1);
 
 	//Main loop
 	while (!glfwWindowShouldClose(window))
@@ -79,18 +75,28 @@ int main()
 		//Clear buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//Lighting
-		lightManager.UpdateLighting(deltaTime);
-
 		//Move cam for fun
 		float xPos = 3 * sin(glfwGetTime() * 2);
 		mainCamera.position.x = xPos;
 
+		//Rotate cube[3]
+		cubes[3].Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 100 * deltaTime);
+
+		//Use shader for cubes
+		glUseProgram(shader);
+
+		//Assign specularity
+		PassFloat(shader, "uSpecularity", specularity);
+
+		//Pass textures
+		PassInt(shader, "uTex", 0);
+		PassInt(shader, "uSpec", 1);
+
 		//Pass cam pos to shader
 		PassV3(shader, "uCamPos", mainCamera.position);
 
-		//Rotate cube[3]
-		cubes[3].Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 100 * deltaTime);
+		//Lighting
+		lightManager.UpdateLighting(deltaTime);
 
 		for (int i = 0; i < sizeof(cubes) / sizeof(Transform); i++)
 		{
@@ -109,6 +115,9 @@ int main()
 			//DRAW
 			glDrawElements(GL_TRIANGLES, indLength, GL_UNSIGNED_INT, nullptr);
 		}
+
+		//Draw debug lights
+		lightManager.DrawDebug(&mainCamera, indLength);
 
 		//Swap buffers
 		glfwSwapBuffers(window);
