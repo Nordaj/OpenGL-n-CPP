@@ -7,6 +7,6 @@ public:
 	float intensity;
 
 	Light();
-	void PassColor(unsigned int shader, const char* name);
-	void PassIntensity(unsigned int shader, const char* name);
+	void PassColor(unsigned int shader, std::string name);
+	void PassIntensity(unsigned int shader, std::string name);
 };

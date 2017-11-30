@@ -7,6 +7,8 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
+#include <string>
+#include <vector>
 
 #include "Main.h"
 
@@ -23,8 +25,12 @@ int main()
 	unsigned int shader = CreateShader(shaders.Vertex, shaders.Fragment); 
 	glUseProgram(shader);
 
-	//Assign ambient color
-	PassV3(shader, "uAmbient", ambientLight);
+	//Light Stuff
+	LightManager lightManager = LightManager(shader);
+	lightManager.ambientLight = glm::vec3(0.05f, 0.05f, 0.05f);
+	lightManager.directionalLights.push_back(DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0.9f, 0.9f), 0.2f));
+	lightManager.pointLights.push_back(PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0), 1));
+	lightManager.pointLights.push_back(PointLight(glm::vec3(-1, 0, 0), glm::vec3(1, 0, 0), 1));
 
 	//Assign specularity
 	PassFloat(shader, "uSpecularity", specularity);
@@ -51,26 +57,6 @@ int main()
 	cubes[6].Rotate(glm::vec3(0.1f, 0.9f, 0.8f), 63);
 	cubes[8].Rotate(glm::vec3(1, 0, 0), 1);
 
-	//Light stuff
-	//PointLight light = PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 1), 1.0f);
-	//light.PassAll(shader, "uLightPos", "uLightColor", "uLightIntensity");
-	//light.PassAll(shader, "pointLight.position", "pointLight.color", "pointLight.intensity");
-	//DirectionalLight dLight = DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0, 0), 0.2f);
-	//dLight.PassAll(shader, "directionalLight.direction", "directionalLight.color", "directionalLight.intensity");
-
-	//Updated Light Stuff
-	PointLight pointLights[] = {
-		PointLight(glm::vec3(0, 0, 0), glm::vec3(1, 0, 0), 1.0f),
-		PointLight(glm::vec3(-2, 0, 0), glm::vec3(0, 1, 0), 1.0f)
-	};
-	pointLights[0].PassAll(shader, "pointLight[0].position", "pointLight[0].color", "pointLight[0].intensity");
-	pointLights[1].PassAll(shader, "pointLight[1].position", "pointLight[1].color", "pointLight[1].intensity");
-
-	DirectionalLight directionalLights[] = {
-		DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(0, 0, 1), 0.2f)
-	};
-	directionalLights[0].PassAll(shader, "directionalLight[0].direction", "directionalLight[0].color", "directionalLight[0].intensity");
-
 	//Create camera
 	mainCamera = Camera();
 	mainCamera.position.z = 4;
@@ -92,6 +78,9 @@ int main()
 
 		//Clear buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//Lighting
+		lightManager.UpdateLighting(deltaTime);
 
 		//Move cam for fun
 		float xPos = 3 * sin(glfwGetTime() * 2);

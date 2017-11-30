@@ -1,5 +1,6 @@
 #include <glm\glm.hpp>
 #include <glew.h>
+#include <string>
 
 #include "Light.h"
 #include "DirectionalLight.h"
@@ -11,23 +12,23 @@ DirectionalLight::DirectionalLight(glm::vec3 Direction, glm::vec3 Color, float I
 	intensity = Intensity;
 }
 
-void DirectionalLight::PassDirection(unsigned int shader, const char* name)
+void DirectionalLight::PassDirection(unsigned int shader, std::string name)
 {
-	int pos = glGetUniformLocation(shader, name);
+	int pos = glGetUniformLocation(shader, name.c_str());
 	glUniform3f(pos, direction.x, direction.y, direction.z);
 }
 
-void DirectionalLight::PassAll(unsigned int shader, const char* directionName, const char* colorName, const char* intensityName)
+void DirectionalLight::PassAll(unsigned int shader, std::string directionName, std::string colorName, std::string intensityName)
 {
 	//Direction
-	int dirLocation = glGetUniformLocation(shader, directionName);
+	int dirLocation = glGetUniformLocation(shader, directionName.c_str());
 	glUniform3f(dirLocation, direction.x, direction.y, direction.z);
 
 	//Color
-	int colLocation = glGetUniformLocation(shader, colorName);
+	int colLocation = glGetUniformLocation(shader, colorName.c_str());
 	glUniform3f(colLocation, color.x, color.y, color.z);
 
 	//Intensity
-	int intLocation = glGetUniformLocation(shader, intensityName);
+	int intLocation = glGetUniformLocation(shader, intensityName.c_str());
 	glUniform1f(intLocation, intensity);
 }

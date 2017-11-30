@@ -10,6 +10,7 @@
 #include "UniformHandler.h"
 #include "Texture.h"
 #include "Camera.h"
+#include "LightManager.h"
 
 //Defines
 #define WIREFRAMEMODE false
@@ -22,7 +23,6 @@
 GLFWwindow *window;
 Camera mainCamera; //TODO find solution
 glm::vec4 backgroundColor(0.05f, 0.05f, 0.05f, 1.0f);
-glm::vec3 ambientLight = glm::vec3(0.1f, 0.1f, 0.1f);
 float specularity = 1.3f;
 double frameStartTime;
 double deltaTime;
