@@ -6,11 +6,12 @@ public:
 	unsigned int shader;
 	std::vector<DirectionalLight> directionalLights;
 	std::vector<PointLight> pointLights;
+	std::vector<SpotLight> spotLights;
 	glm::vec3 ambientLight;
 
 	LightManager();
 	LightManager(unsigned int Shader, bool DebugMode = false);
-	LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, glm::vec3 AmbientLight);
+	LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, std::vector<SpotLight> SpotLights, glm::vec3 AmbientLight);
 	void UpdateLighting(float deltaTime);
 	void DrawDebug(Camera *camera, int cubeIndiciesLength);
 

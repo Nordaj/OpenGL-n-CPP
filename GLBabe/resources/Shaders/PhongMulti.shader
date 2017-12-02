@@ -47,6 +47,14 @@ struct DirectionalLight {
 	float intensity;
 };
 
+struct SpotLight {
+	vec3 position;
+	vec3 direction;
+	vec3 color;
+	float intensity;
+	float cutoff;
+};
+
 uniform sampler2D uTex;
 uniform sampler2D uSpec;
 
@@ -55,6 +63,7 @@ uniform vec3 uAmbient;
 //I pulled these max numbers for lights out of my ass, feel free to change them
 uniform PointLight pointLight[8];
 uniform DirectionalLight directionalLight[4];
+uniform SpotLight spotLight[8];
 
 uniform vec3 uCamPos;
 uniform float uSpecularity;
@@ -62,6 +71,7 @@ uniform float uSpecularity;
 float Attenuation(float constant, float lin, float quadratic, float distance);
 vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight pLight, vec3 normal, vec3 viewDir, vec3 fragPos);
+vec3 CalcSpotLight(SpotLight sLight, vec3 normal, vec3 viewDir, vec3 fragPos);
 
 /*
 void main()
@@ -111,8 +121,16 @@ void main()
 			pointLightCol += CalcPointLight(pointLight[i], normal, viewDir, iFragPos);
 	}
 
+	//-------------Spot Light------------------------
+	vec3 spotLightCol = vec3(0, 0, 0);
+	for (int i = 0; i < 8; i++)
+	{
+		if (spotLight[i].intensity != 0)
+			pointLightCol += CalcSpotLight(spotLight[i], normal, viewDir, iFragPos);
+	}
+
 	//-------------Calc Result-----------------------
-	vec4 result = vec4(pointLightCol + dirCol + ambCol, 1.0);
+	vec4 result = vec4(pointLightCol + dirCol + spotLightCol + ambCol, 1.0);
 
 	//-------------Output----------------------------
 	//color = vec4(uSpecularity, uSpecularity, uSpecularity, 1.0);
@@ -163,4 +181,36 @@ vec3 CalcPointLight(PointLight pLight, vec3 normal, vec3 viewDir, vec3 fragPos)
 
 	//Return
 	return specColor + diffuseColor;
+}
+
+vec3 CalcSpotLight(SpotLight sLight, vec3 normal, vec3 viewDir, vec3 fragPos)
+{
+	//difference is normally "theta" but im not good at mathy stuff like that so i use what makes sense to me, like it or leave it
+	vec3 lightDir = normalize(sLight.position - fragPos);
+	float difference = dot(lightDir, normalize(-sLight.direction));
+
+	//Maybe change sign, idk
+	if (difference > sLight.cutoff)
+	{
+		//We are inside! (do regular point light stuff)
+
+		//Diffuse
+		float distance = length(sLight.position - fragPos) / sLight.intensity;
+		float attenuation = Attenuation(1.0, 1, 2, distance);
+		float dotResult = dot(-lightDir, normal);
+		vec3 diffuseColor = sLight.color * (attenuation * dotResult) * texture(uTex, iTextureCoord).rgb;
+
+		//Specular
+		vec3 reflectionDirection = reflect(-lightDir, viewDir);
+		float specIntensity = dot(viewDir, reflectionDirection);
+		if (specIntensity < 0) specIntensity = 0;
+		specIntensity = pow(specIntensity, 32);
+		specIntensity *= uSpecularity * attenuation;
+		vec3 specColor = specIntensity * texture(uSpec, iTextureCoord).rgb * sLight.color;
+
+		//Return
+		return specColor + diffuseColor;
+	}
+
+	return vec3(0, 0, 0);
 }

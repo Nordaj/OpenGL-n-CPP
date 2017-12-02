@@ -31,6 +31,7 @@ int main()
 	lightManager.directionalLights.push_back(DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0.9f, 0.9f), 0.2f));
 	lightManager.pointLights.push_back(PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0), 1));
 	lightManager.pointLights.push_back(PointLight(glm::vec3(-2, 0, 0), glm::vec3(1, 0, 0), 1));
+	lightManager.spotLights.push_back(SpotLight(glm::vec3(-1, 0, 0), glm::vec3(2, -1, -1), glm::vec3(0, 0, 1), 3, glm::cos(glm::radians(10.0f))));
 
 	//Object's transform
 	Transform cubes[] = {
@@ -76,7 +77,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//Move cam for fun
-		float xPos = 3 * sin(glfwGetTime() * 2);
+		float xPos = 5 * sin(glfwGetTime() * 2);
 		mainCamera.position.x = xPos;
 
 		//Rotate cube[3]

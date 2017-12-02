@@ -146,6 +146,7 @@
     <ClCompile Include="src\LightManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\PointLight.cpp" />
+    <ClCompile Include="src\SpotLight.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\UniformHandler.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\PointLight.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\SpotLight.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\UniformHandler.h" />

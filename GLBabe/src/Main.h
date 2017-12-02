@@ -5,6 +5,7 @@
 #include "Light.h"
 #include "PointLight.h"
 #include "DirectionalLight.h"
+#include "SpotLight.h"
 #include "Cube.h"
 #include "Shader.h"
 #include "UniformHandler.h"
