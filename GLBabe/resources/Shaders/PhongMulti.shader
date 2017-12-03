@@ -2,11 +2,9 @@
 #version 330 core
 
 layout(location = 0) in vec4 position;
-layout(location = 1) in vec3 color;
-layout(location = 2) in vec2 texCoord;
-layout(location = 3) in vec3 normal;
+layout(location = 1) in vec2 texCoord;
+layout(location = 2) in vec3 normal;
 
-out vec3 iCol;
 out vec2 iTextureCoord;
 out vec3 iNormal;
 out vec3 iFragPos;
@@ -17,7 +15,6 @@ uniform mat4 uModel;
 void main()
 {
 	gl_Position = uMVPMatrix * position;
-	iCol = color;
 	iTextureCoord = texCoord;
 
 	//TODO: calculate on cpu instead
@@ -30,7 +27,6 @@ void main()
 
 out vec4 color;
 
-in vec3 iCol;
 in vec2 iTextureCoord;
 in vec3 iNormal;
 in vec3 iFragPos;
