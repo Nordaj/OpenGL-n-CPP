@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+#include <glm\glm.hpp>
+#include "Light.h"
+
 class SpotLight : public Light
 {
 public:

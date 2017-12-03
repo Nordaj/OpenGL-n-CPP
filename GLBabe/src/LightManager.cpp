@@ -4,13 +4,11 @@
 #include <vector>
 #include <iostream>
 #include "Light.h"
-#include "PointLight.h"
-#include "DirectionalLight.h"
-#include "SpotLight.h"
 #include "UniformHandler.h"
 #include "Shader.h"
 #include "Transform.h"
 #include "Camera.h"
+#include "HardCodedMeshes.h"
 
 #include "LightManager.h"
 
@@ -29,13 +27,19 @@ LightManager::LightManager(unsigned int Shader, bool DebugMode)
 	}
 }
 
-LightManager::LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, std::vector<SpotLight> SpotLights, glm::vec3 AmbientLight)
+LightManager::LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, std::vector<SpotLight> SpotLights, glm::vec3 AmbientLight, bool DebugMode)
 {
 	shader = Shader;
 	directionalLights = DirectionalLights;
 	pointLights = PointLights;
 	spotLights = SpotLights;
 	ambientLight = AmbientLight;
+
+	if (DebugMode)
+	{
+		debugRender = true;
+		SetupDebug();
+	}
 }
 
 void LightManager::SetupDebug()
@@ -45,12 +49,39 @@ void LightManager::SetupDebug()
 	debugShader = CreateShader(shaders.Vertex, shaders.Fragment);
 	glUseProgram(debugShader);
 
-	debugCube = Transform();
-	debugCube.SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
-	debugCube.Translate(glm::vec3(0, 0, 0));
+	//Set scale
+	transform.SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
+
+	//---Setup mesh---//
+	//Gen and bind VAO
+	glGenVertexArrays(1, &debugVAO);
+	glBindVertexArray(debugVAO);
+
+	//Generate buffers
+	glGenBuffers(1, &debugVBO);
+	glGenBuffers(1, &debugIBO);
+
+	//Setup VBO
+	glBindBuffer(GL_ARRAY_BUFFER, debugVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * cubeVertices.size(), &cubeVertices[0], GL_STATIC_DRAW);
+
+	//Setup IBO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, debugIBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * cubeIndices.size(), &cubeIndices[0], GL_STATIC_DRAW);
+
+	//Setup vertex attributes
+	//Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
+	//Texture Coord
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(sizeof(float) * 3));
+	//Normal
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(sizeof(float) * 5));
 }
 
-void LightManager::UpdateLighting(float deltaTime)
+void LightManager::UpdateLighting()
 {
 	//Directional Lights
 	for (int i = 0; i < directionalLights.size(); i++)
@@ -82,55 +113,50 @@ void LightManager::UpdateLighting(float deltaTime)
 	PassV3(shader, "uAmbient", ambientLight);
 }
 
-void LightManager::DrawDebug(Camera *camera, int cubeIndiciesLength)
+void LightManager::DrawDebug(glm::mat4 view, glm::mat4 projection)
 {
+	//Use shader
+	glUseProgram(debugShader);
+
+	//Bind vao
+	glBindVertexArray(debugVAO);
+
 	//Render unlit cube for debugging
-	if (debugRender)
+	//Point Lights
+	for (int i = 0; i < pointLights.size(); i++)
 	{
-		glUseProgram(debugShader);
+		//Set position of transform
+		transform.SetPosition(pointLights[i].position);
 
-		//Point Lights
-		for (int i = 0; i < pointLights.size(); i++)
-		{
-			//Pass color
-			PassV3(debugShader, "uColor", pointLights[i].color);
+		//Calc mat
+		glm::mat4 MVP = projection * view * transform.GetMatrix();
 
-			//Set position of transform
-			debugCube.SetPosition(pointLights[i].position);
+		//Pass color
+		PassV3(debugShader, "uColor", pointLights[i].color);
 
-			//MVP Matrix
-			glm::mat4 model = debugCube.GetMatrix();
-			glm::mat4 view = camera->GetView();
-			glm::mat4 projection = camera->GetPerspective();
-			glm::mat4 MVPMatrix = projection * view * model;
+		//Pass Matrix
+		PassMat4(debugShader, "uMVPMatrix", MVP);
 
-			//Give MVP to shader
-			PassMat4(debugShader, "uMVPMatrix", MVPMatrix);
+		//Draw
+		glDrawElements(GL_TRIANGLES, cubeIndices.size(), GL_UNSIGNED_INT, nullptr);
+	}
 
-			//DRAW
-			glDrawElements(GL_TRIANGLES, cubeIndiciesLength, GL_UNSIGNED_INT, nullptr);
-		}
+	//Spot Lights
+	for (int i = 0; i < spotLights.size(); i++)
+	{
+		//Set position of transform
+		transform.SetPosition(spotLights[i].position);
 
-		//Spot Lights
-		for (int i = 0; i < spotLights.size(); i++)
-		{
-			//Pass color
-			PassV3(debugShader, "uColor", spotLights[i].color);
+		//Calc mat
+		glm::mat4 MVP = projection * view * transform.GetMatrix();
 
-			//Set position of transform
-			debugCube.SetPosition(spotLights[i].position);
+		//Pass color
+		PassV3(debugShader, "uColor", spotLights[i].color);
 
-			//MVP Matrix
-			glm::mat4 model = debugCube.GetMatrix();
-			glm::mat4 view = camera->GetView();
-			glm::mat4 projection = camera->GetPerspective();
-			glm::mat4 MVPMatrix = projection * view * model;
+		//Pass Matrix
+		PassMat4(debugShader, "uMVPMatrix", MVP);
 
-			//Give MVP to shader
-			PassMat4(debugShader, "uMVPMatrix", MVPMatrix);
-
-			//DRAW
-			glDrawElements(GL_TRIANGLES, cubeIndiciesLength, GL_UNSIGNED_INT, nullptr);
-		}
+		//Draw
+		glDrawElements(GL_TRIANGLES, cubeIndices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 }

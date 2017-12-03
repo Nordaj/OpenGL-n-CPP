@@ -1,17 +1,11 @@
 #pragma once
 
 //Includes
-#include "Transform.h"
-#include "Light.h"
-#include "PointLight.h"
-#include "DirectionalLight.h"
-#include "SpotLight.h"
-#include "Cube.h"
-#include "Shader.h"
-#include "UniformHandler.h"
-#include "Texture.h"
+#include <glew.h>
+#include <glfw3.h>
+#include <glm\glm.hpp>
+
 #include "Camera.h"
-#include "LightManager.h"
 
 //Defines
 #define WIREFRAMEMODE false

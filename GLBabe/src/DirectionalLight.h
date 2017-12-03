@@ -1,5 +1,9 @@
 #pragma once
 
+#include <glm\glm.hpp>
+#include <string>
+#include "Light.h"
+
 class DirectionalLight : public Light
 {
 public:

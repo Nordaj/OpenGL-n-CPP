@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm\glm.hpp>
+
 void PassFloat(int shader, const char* name, float value);
 void PassInt(int shader, const char* name, int value);
 void PassV3(int shader, const char* name, glm::vec3 value);
