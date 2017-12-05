@@ -35,7 +35,7 @@ Camera::Camera(glm::vec3 Position, glm::vec3 LookAt, glm::vec3 Up, float Pov, fl
 
 glm::mat4 Camera::GetView()
 {
-	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::mat4(1.0f);
 
 	if (lookAtGlobal)
 		view = glm::lookAt(position, position + lookAt, up);
@@ -47,7 +47,7 @@ glm::mat4 Camera::GetView()
 
 glm::mat4 Camera::GetPerspective()
 {
-	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::mat4(1.0f);
 
 	projection = glm::perspective(glm::radians(pov), aspect, near, far);
 

@@ -54,6 +54,9 @@
     <ClCompile Include="src\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -112,6 +115,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\Unlit.shader" />
-    <None Include="resources\Shaders\Phong.shader" />
   </ItemGroup>
 </Project>

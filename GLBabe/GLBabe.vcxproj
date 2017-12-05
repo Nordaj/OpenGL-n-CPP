@@ -148,6 +148,7 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\PointLight.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\SpotLight.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Transform.cpp" />
@@ -175,7 +176,6 @@
     <Image Include="resources\Specular.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\Shaders\Phong.shader" />
     <None Include="src\Shaders\Unlit.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

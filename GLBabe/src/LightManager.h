@@ -10,7 +10,6 @@
 class LightManager
 {
 public:
-	unsigned int shader;
 	std::vector<DirectionalLight> directionalLights;
 	std::vector<PointLight> pointLights;
 	std::vector<SpotLight> spotLights;
@@ -19,7 +18,7 @@ public:
 	LightManager();
 	LightManager(unsigned int Shader, bool DebugMode = false);
 	LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, std::vector<SpotLight> SpotLights, glm::vec3 AmbientLight, bool DebugMode = true);
-	void UpdateLighting();
+	void UpdateLighting(unsigned int shad = -1);
 	void DrawDebug(glm::mat4 view, glm::mat4 projection);
 
 private:
@@ -29,6 +28,7 @@ private:
 	unsigned int debugVBO;
 	unsigned int debugIBO;
 	Transform transform;
+	unsigned int shader;
 
 	void SetupDebug();
 };

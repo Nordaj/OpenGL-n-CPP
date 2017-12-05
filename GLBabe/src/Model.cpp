@@ -24,30 +24,33 @@ Model::Model(Mesh m, float Specularity, unsigned int Shader, Transform tran)
 	:mesh(m), specularity(Specularity), shader(Shader), transform(tran) { }
 
 Model::Model(std::vector<float> Vertices, std::vector<unsigned int> Indices, unsigned int Diffuse, unsigned int Specular, unsigned int Shader, float Specularity, Transform tran)
-	:mesh(Mesh(Vertices, Indices, Diffuse, Specular, Shader)), specularity(Specularity), transform(tran) { }
+	:mesh(Mesh(Vertices, Indices, Diffuse, Specular, Shader)), specularity(Specularity), transform(tran), shader(Shader) { }
 
 void Model::Update(float deltaTime)
 {
 
 }
 
-void Model::Render(glm::mat4 view, glm::mat4 projection, glm::vec3 camPos, LightManager lightManager)
+void Model::Render(glm::mat4 view, glm::mat4 projection, glm::vec3 camPos, LightManager *lightManager, bool first)
 {
 	//Calculate matrices
 	glm::mat4 model = transform.GetMatrix();
 	glm::mat4 MVP = projection * view * model;
 
-	//Use shader
-	glUseProgram(shader);
+	if (first)
+	{
+		//Use shader
+		glUseProgram(shader);
+
+		//Update Lighting
+		lightManager->UpdateLighting(shader);
+	}
 
 	//Pass uniforms
 	PassFloat(shader, "uSpecularity", specularity);
 	PassMat4(shader, "uMVPMatrix", MVP);
 	PassMat4(shader, "uModel", model);
 	PassV3(shader, "uCamPos", camPos);
-
-	//Update Lighting
-	lightManager.UpdateLighting();
 
 	//Render!
 	mesh.Draw();

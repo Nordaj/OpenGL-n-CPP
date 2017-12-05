@@ -102,19 +102,29 @@ int main()
 		float xPos = 5 * (float) sin(glfwGetTime() * 2);
 		mainCamera.position.x = xPos;
 
+		//Rotate cube and pyramid
 		models[3].transform.Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 100 * (float) deltaTime);
 		models[8].transform.Rotate(glm::vec3(1, 1, 0), 100 * (float) deltaTime);
+
+		//Calculate view/perspectives
+		glm::mat4 viewMat = mainCamera.GetView();
+		glm::mat4 perspectiveMat = mainCamera.GetPerspective();
+
+		//Decide if first model (with specific shader)
+		bool first = true;
 
 		//Draw models
 		for (int i = 0; i < sizeof(models) / sizeof(Model); i++) 
 		{
 			models[i].Update((float) deltaTime);
 
-			models[i].Render(mainCamera.GetView(), mainCamera.GetPerspective(), mainCamera.position, lightManager);
+			models[i].Render(viewMat, perspectiveMat, mainCamera.position, &lightManager, first);
+
+			first = false;
 		}
 
 		//Draw debug lights
-		lightManager.DrawDebug(mainCamera.GetView(), mainCamera.GetPerspective());
+		lightManager.DrawDebug(viewMat, perspectiveMat);
 
 		//Swap buffers
 		glfwSwapBuffers(window);

@@ -81,8 +81,14 @@ void LightManager::SetupDebug()
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(sizeof(float) * 5));
 }
 
-void LightManager::UpdateLighting()
+void LightManager::UpdateLighting(unsigned int shad)
 {
+	//(if using same shader from before)
+	if (shad == -1)
+		shad = shader;
+	else
+		shader = shad;
+
 	//Directional Lights
 	for (int i = 0; i < directionalLights.size(); i++)
 	{
