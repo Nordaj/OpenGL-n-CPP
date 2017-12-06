@@ -18,10 +18,11 @@
 //Variables
 GLFWwindow *window;
 Camera mainCamera; //TODO find solution
-glm::vec4 backgroundColor(0.05f, 0.05f, 0.05f, 1.0f);
+glm::vec4 backgroundColor(0.02f, 0.02f, 0.02f, 1.0f);
 float specularity = 1.3f;
 double frameStartTime;
 double deltaTime;
+float camSpeed = 10;
 
 //Functions
 int Setup();

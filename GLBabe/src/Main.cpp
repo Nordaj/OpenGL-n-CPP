@@ -60,6 +60,8 @@ int main()
 	//Create camera
 	mainCamera = Camera();
 	mainCamera.position.z = 4;
+	mainCamera.lookAtGlobal = true;
+	mainCamera.lookAt = glm::vec3(0, 0, -1);
 
 	//Create objects
 	Model models[] = {
@@ -99,8 +101,24 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//Move cam for fun
-		float xPos = 5 * (float) sin(glfwGetTime() * 2);
-		mainCamera.position.x = xPos;
+		//float xPos = 5 * (float) sin(glfwGetTime() * 2);
+		//mainCamera.position.x = xPos;
+
+		//Camera Controls
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			mainCamera.position.z -= camSpeed * (float)deltaTime;
+		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			mainCamera.position.z += camSpeed * (float)deltaTime;
+
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			mainCamera.position.x -= camSpeed * (float)deltaTime;
+		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			mainCamera.position.x += camSpeed * (float)deltaTime;
+
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+			mainCamera.position.y -= camSpeed * (float)deltaTime;
+		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+			mainCamera.position.y += camSpeed * (float)deltaTime;
 
 		//Rotate cube and pyramid
 		models[3].transform.Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 100 * (float) deltaTime);
