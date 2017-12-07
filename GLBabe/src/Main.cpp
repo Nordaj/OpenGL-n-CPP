@@ -50,7 +50,7 @@ int main()
 
 	//Light Stuff
 	LightManager lightManager = LightManager(shader, DEBUGLIGHTS);
-	lightManager.ambientLight = glm::vec3(0.05f, 0.05f, 0.05f);
+	lightManager.ambientLight = glm::vec3(0.3f, 0.3f, 0.3f);
 	lightManager.directionalLights.push_back(DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0.9f, 0.9f), 0.2f));
 	lightManager.pointLights.push_back(PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0), 1));
 	lightManager.pointLights.push_back(PointLight(glm::vec3(-2, 0, 0), glm::vec3(1, 0, 0), 1));
@@ -59,9 +59,7 @@ int main()
 
 	//Create camera
 	mainCamera = Camera();
-	mainCamera.position.z = 4;
-	mainCamera.lookAtGlobal = true;
-	mainCamera.lookAt = glm::vec3(0, 0, -1);
+	mainCamera.position = glm::vec3(0, 1, 0);
 
 	//Create objects
 	Model models[] = {
@@ -91,6 +89,9 @@ int main()
 	models[5].transform.Rotate(glm::vec3(0.5f, 0.93f, 0), 164);
 	models[6].transform.Rotate(glm::vec3(0.1f, 0.9f, 0.8f), 63);
 
+	//Lock Cursor
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	//Main loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -104,21 +105,29 @@ int main()
 		//float xPos = 5 * (float) sin(glfwGetTime() * 2);
 		//mainCamera.position.x = xPos;
 
+		glfwGetCursorPos(window, &cursorX, &cursorY);
+
 		//Camera Controls
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-			mainCamera.position.z -= camSpeed * (float)deltaTime;
+			mainCamera.RelativeTranslate(glm::vec3(0, 0, -camSpeed * (float)deltaTime));
 		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-			mainCamera.position.z += camSpeed * (float)deltaTime;
+			mainCamera.RelativeTranslate(glm::vec3(0, 0, camSpeed * (float)deltaTime));
 
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-			mainCamera.position.x -= camSpeed * (float)deltaTime;
+			mainCamera.RelativeTranslate(glm::vec3(-camSpeed * (float)deltaTime, 0, 0));
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			mainCamera.position.x += camSpeed * (float)deltaTime;
+			mainCamera.RelativeTranslate(glm::vec3(camSpeed * (float)deltaTime, 0, 0));
 
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 			mainCamera.position.y -= camSpeed * (float)deltaTime;
 		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 			mainCamera.position.y += camSpeed * (float)deltaTime;
+
+		mainCamera.eulerAngles.y += (cursorX - lastCursorX) * deltaTime * camRotSpeed;
+		mainCamera.eulerAngles.x += (cursorY - lastCursorY) * deltaTime * camRotSpeed;
+
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 		//Rotate cube and pyramid
 		models[3].transform.Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 100 * (float) deltaTime);
@@ -126,7 +135,7 @@ int main()
 
 		//Calculate view/perspectives
 		glm::mat4 viewMat = mainCamera.GetView();
-		glm::mat4 perspectiveMat = mainCamera.GetPerspective();
+		glm::mat4 perspectiveMat = mainCamera.GetProjection();
 
 		//Decide if first model (with specific shader)
 		bool first = true;
@@ -143,6 +152,9 @@ int main()
 
 		//Draw debug lights
 		lightManager.DrawDebug(viewMat, perspectiveMat);
+
+		lastCursorX = cursorX;
+		lastCursorY = cursorY;
 
 		//Swap buffers
 		glfwSwapBuffers(window);

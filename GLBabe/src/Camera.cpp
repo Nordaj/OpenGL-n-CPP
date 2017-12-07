@@ -7,48 +7,52 @@
 
 Camera::Camera()
 {
-	position = glm::vec3(0, 0, 3);
-	lookAt = glm::vec3(0, 0, 0);
-	up = glm::vec3(0, 1, 0);
+	position = glm::vec3(0, 1, 0);
+	eulerAngles = glm::vec3(0, 0, 0);
 
 	pov = 60;
 	aspect = 1;
 	near = 0.1f;
 	far = 500;
 
-	lookAtGlobal = false;
+	view = glm::mat4(1.0f);
+	projection = glm::mat4(1.0f);
 }
 
-Camera::Camera(glm::vec3 Position, glm::vec3 LookAt, glm::vec3 Up, float Pov, float Aspect, float Near, float Far)
+Camera::Camera(glm::vec3 Position, float Pov, float Aspect, float Near, float Far)
 {
 	position = Position;
-	lookAt = LookAt;
-	up = Up;
 
 	pov = Pov;
 	aspect = Aspect;
 	near = Near;
 	far = Far;
 
-	lookAtGlobal = false;
+	view = glm::mat4(1.0f);
+	projection = glm::mat4(1.0f);
+}
+
+void Camera::RelativeTranslate(glm::vec3 translation)
+{
+	//TODO: Make relative to euler angles
+	position += translation;
 }
 
 glm::mat4 Camera::GetView()
 {
+	glm::mat4 rot = glm::mat4(1.0f);
+	rot = glm::rotate(rot, eulerAngles.x, glm::vec3(1, 0, 0));
+	rot = glm::rotate(rot, eulerAngles.y, glm::vec3(0, 1, 0));
+	rot = glm::rotate(rot, eulerAngles.z, glm::vec3(0, 0, 1));
+
 	view = glm::mat4(1.0f);
-
-	if (lookAtGlobal)
-		view = glm::lookAt(position, position + lookAt, up);
-	else
-		view = glm::lookAt(position, lookAt, up);
-
+	view *= rot;
+	view = glm::translate(view, -position);
 	return view;
 }
 
-glm::mat4 Camera::GetPerspective()
+glm::mat4 Camera::GetProjection()
 {
-	projection = glm::mat4(1.0f);
-
 	projection = glm::perspective(glm::radians(pov), aspect, near, far);
 
 	return projection;

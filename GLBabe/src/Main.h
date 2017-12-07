@@ -23,6 +23,11 @@ float specularity = 1.3f;
 double frameStartTime;
 double deltaTime;
 float camSpeed = 10;
+float camRotSpeed = 2;
+double cursorX;
+double cursorY;
+double lastCursorX;
+double lastCursorY;
 
 //Functions
 int Setup();
