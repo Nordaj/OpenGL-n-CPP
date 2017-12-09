@@ -23,11 +23,24 @@
 #include "Model.h"
 #include "LightManager.h"
 #include "HardCodedMeshes.h"
+#include "Math/Vector2.h"
+#include "Math/Vector3.h"
 
 #include "Main.h"
 
 int main()
 {
+	//DEBUG MATH
+
+	Vector3 vec = Vector3(1, 2, 0);
+	Vector3 vec2 = Vector3(0, 1, 0);
+
+	vec += vec2;
+
+	std::cout << vec << std::endl;
+
+	//END DEBUG MATH
+
 	//Setup Game
 	if (Setup()) return 0;
 
@@ -50,7 +63,7 @@ int main()
 
 	//Light Stuff
 	LightManager lightManager = LightManager(shader, DEBUGLIGHTS);
-	lightManager.ambientLight = glm::vec3(0.3f, 0.3f, 0.3f);
+	lightManager.ambientLight = glm::vec3(0.1f, 0.1f, 0.1f);
 	lightManager.directionalLights.push_back(DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0.9f, 0.9f), 0.2f));
 	lightManager.pointLights.push_back(PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0), 1));
 	lightManager.pointLights.push_back(PointLight(glm::vec3(-2, 0, 0), glm::vec3(1, 0, 0), 1));
@@ -59,7 +72,7 @@ int main()
 
 	//Create camera
 	mainCamera = Camera();
-	mainCamera.position = glm::vec3(0, 1, 0);
+	mainCamera.position = glm::vec3(0, 0, 4);
 
 	//Create objects
 	Model models[] = {
@@ -90,7 +103,7 @@ int main()
 	models[6].transform.Rotate(glm::vec3(0.1f, 0.9f, 0.8f), 63);
 
 	//Lock Cursor
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	//Main loop
 	while (!glfwWindowShouldClose(window))
@@ -102,32 +115,8 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//Move cam for fun
-		//float xPos = 5 * (float) sin(glfwGetTime() * 2);
-		//mainCamera.position.x = xPos;
-
-		glfwGetCursorPos(window, &cursorX, &cursorY);
-
-		//Camera Controls
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-			mainCamera.RelativeTranslate(glm::vec3(0, 0, -camSpeed * (float)deltaTime));
-		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-			mainCamera.RelativeTranslate(glm::vec3(0, 0, camSpeed * (float)deltaTime));
-
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-			mainCamera.RelativeTranslate(glm::vec3(-camSpeed * (float)deltaTime, 0, 0));
-		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			mainCamera.RelativeTranslate(glm::vec3(camSpeed * (float)deltaTime, 0, 0));
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-			mainCamera.position.y -= camSpeed * (float)deltaTime;
-		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-			mainCamera.position.y += camSpeed * (float)deltaTime;
-
-		mainCamera.eulerAngles.y += (cursorX - lastCursorX) * deltaTime * camRotSpeed;
-		mainCamera.eulerAngles.x += (cursorY - lastCursorY) * deltaTime * camRotSpeed;
-
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		float xPos = (float) sin(glfwGetTime() * 2);
+		mainCamera.position.x = xPos;
 
 		//Rotate cube and pyramid
 		models[3].transform.Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 100 * (float) deltaTime);
@@ -152,9 +141,6 @@ int main()
 
 		//Draw debug lights
 		lightManager.DrawDebug(viewMat, perspectiveMat);
-
-		lastCursorX = cursorX;
-		lastCursorY = cursorY;
 
 		//Swap buffers
 		glfwSwapBuffers(window);

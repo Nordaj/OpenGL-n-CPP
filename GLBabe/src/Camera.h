@@ -7,7 +7,7 @@ class Camera
 {
 public:
 	glm::vec3 position;
-	glm::vec3 eulerAngles;
+	glm::quat rotation;
 
 	Camera();
 	Camera(glm::vec3 Position, float Pov = 60, float Aspect = 1, float Near = 0.1f, float Far = 500);
@@ -15,7 +15,7 @@ public:
 	glm::mat4 GetView();
 	glm::mat4 GetProjection();
 	void UpdateAspect(float aspect);
-	void RelativeTranslate(glm::vec3 translation);
+	void Rotate(glm::vec3 axis, float amount);
 
 private: 
 	bool first;

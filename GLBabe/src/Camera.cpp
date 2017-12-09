@@ -2,13 +2,16 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
+#include <glm\gtx\quaternion.hpp>
+#include <iostream>
 
 #include "Camera.h"
 
 Camera::Camera()
 {
 	position = glm::vec3(0, 1, 0);
-	eulerAngles = glm::vec3(0, 0, 0);
+	rotation = glm::quat();
+	rotation.w = 1;
 
 	pov = 60;
 	aspect = 1;
@@ -22,6 +25,7 @@ Camera::Camera()
 Camera::Camera(glm::vec3 Position, float Pov, float Aspect, float Near, float Far)
 {
 	position = Position;
+	rotation = glm::quat();
 
 	pov = Pov;
 	aspect = Aspect;
@@ -32,18 +36,34 @@ Camera::Camera(glm::vec3 Position, float Pov, float Aspect, float Near, float Fa
 	projection = glm::mat4(1.0f);
 }
 
-void Camera::RelativeTranslate(glm::vec3 translation)
+void Camera::Rotate(glm::vec3 axis, float amount)
 {
-	//TODO: Make relative to euler angles
-	position += translation;
+	amount = glm::radians(amount);
+
+	glm::quat change = glm::quat();
+	change.w = 1;
+
+	change.x = axis.x * sin(amount / 2);
+	change.y = axis.y * sin(amount / 2);
+	change.z = axis.z * sin(amount / 2);
+	change.w = cos(amount / 2);
+
+	rotation = change * rotation;
+
+	//rotation = glm::rotate(rotation, glm::radians(amount), axis);
+
+	/* PSEUDO CODE FROM ONLINE
+	x = RotationAxis.x * sin(RotationAngle / 2)
+	y = RotationAxis.y * sin(RotationAngle / 2)
+	z = RotationAxis.z * sin(RotationAngle / 2)
+	w = cos(RotationAngle / 2)
+	*/
 }
 
 glm::mat4 Camera::GetView()
 {
-	glm::mat4 rot = glm::mat4(1.0f);
-	rot = glm::rotate(rot, eulerAngles.x, glm::vec3(1, 0, 0));
-	rot = glm::rotate(rot, eulerAngles.y, glm::vec3(0, 1, 0));
-	rot = glm::rotate(rot, eulerAngles.z, glm::vec3(0, 0, 1));
+	//glm::mat4 rot = glm::mat4(1.0f);
+	glm::mat4 rot = glm::toMat4(rotation);
 
 	view = glm::mat4(1.0f);
 	view *= rot;

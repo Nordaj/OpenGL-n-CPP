@@ -9,7 +9,7 @@
 
 //Defines
 #define WIREFRAMEMODE false
-#define VSYNC false
+#define VSYNC true
 #define WIDTH 500
 #define HEIGHT 500
 #define WINDOWNAME "Hey"
@@ -22,12 +22,6 @@ glm::vec4 backgroundColor(0.02f, 0.02f, 0.02f, 1.0f);
 float specularity = 1.3f;
 double frameStartTime;
 double deltaTime;
-float camSpeed = 10;
-float camRotSpeed = 2;
-double cursorX;
-double cursorY;
-double lastCursorX;
-double lastCursorY;
 
 //Functions
 int Setup();
