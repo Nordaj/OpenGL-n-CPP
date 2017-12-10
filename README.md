@@ -1,5 +1,8 @@
 <h1>OpenGL-n-CPP</h1>
 
+<h2>NOTE</h2>
+I am currently working on my own math to replace glm, contributions may be spaced apart some time.
+
 <h2>About</h2>
 Just a personal project for learning OpenGL and better C++. 
 

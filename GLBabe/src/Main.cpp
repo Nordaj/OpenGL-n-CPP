@@ -25,6 +25,7 @@
 #include "HardCodedMeshes.h"
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
+#include "Math\Matrix4.h"
 
 #include "Main.h"
 
@@ -32,12 +33,25 @@ int main()
 {
 	//DEBUG MATH
 
-	Vector3 vec = Vector3(1, 2, 0);
-	Vector3 vec2 = Vector3(0, 1, 0);
+	Matrix4 mat = Matrix4(2);
+	mat.elements[1] = 3;
+	mat.elements[9] = 35;
+	mat.elements[11] = 8;
+	mat.elements[7] = 4;
 
-	vec += vec2;
+	Matrix4 mat2 = Matrix4(1);
+	//mat2.elements[1] = 4;
+	//mat2.elements[8] = 34;
 
-	std::cout << vec << std::endl;
+	mat *= mat2;
+
+	Matrix4 mat3 = Matrix4(0);
+	mat3 = Matrix4::Perspective(60, 1, 0.1f, 500);
+
+	Matrix4 mat4 = Matrix4(1);
+	mat4 = Matrix4::Rotation(Vector3(0, 1, 0), 50);
+
+	//std::cout << mat4 << std::endl;
 
 	//END DEBUG MATH
 

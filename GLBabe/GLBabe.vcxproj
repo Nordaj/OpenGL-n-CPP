@@ -145,6 +145,7 @@
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\LightManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Math\Matrix4.cpp" />
     <ClCompile Include="src\Math\Vector2.cpp" />
     <ClCompile Include="src\Math\Vector3.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
@@ -163,6 +164,8 @@
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\LightManager.h" />
     <ClInclude Include="src\Main.h" />
+    <ClInclude Include="src\Math\Matrix4.h" />
+    <ClInclude Include="src\Math\Misc.h" />
     <ClInclude Include="src\Math\Vector2.h" />
     <ClInclude Include="src\Math\Vector3.h" />
     <ClInclude Include="src\Mesh.h" />

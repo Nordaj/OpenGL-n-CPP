@@ -29,5 +29,8 @@ public:
 	Vector3 operator/(const Vector3 &other);
 	Vector3 operator/=(const Vector3 &other);
 
+	bool operator==(const Vector3 &other);
+	bool operator!=(const Vector3 &other);
+
 	friend std::ostream &operator<<(std::ostream &stream, Vector3 &vec);
 };
