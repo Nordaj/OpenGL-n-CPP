@@ -104,6 +104,9 @@ Matrix4 Matrix4::Translation(Vector3 &translation)
 
 Matrix4 Matrix4::Rotation(Vector3 &axis, float angle)
 {
+	//MIGHT NOT WORK
+	//(did not match glm or an online rotation calc, we shall see if this works)
+
 	Matrix4 mat = Matrix4(1);
 
 	angle = Radians(angle);

@@ -33,25 +33,15 @@ int main()
 {
 	//DEBUG MATH
 
-	Matrix4 mat = Matrix4(2);
-	mat.elements[1] = 3;
-	mat.elements[9] = 35;
-	mat.elements[11] = 8;
-	mat.elements[7] = 4;
+	Vector3 vec = Vector3(3, 0, -7);
+	Vector3 vec2 = Vector3(20, 5, -0.0f);
 
-	Matrix4 mat2 = Matrix4(1);
-	//mat2.elements[1] = 4;
-	//mat2.elements[8] = 34;
+	float dot = vec.Dot(vec2);
 
-	mat *= mat2;
+	Vector3 inf = Vector3(3, 2, -1);
+	//inf.Normalize();
 
-	Matrix4 mat3 = Matrix4(0);
-	mat3 = Matrix4::Perspective(60, 1, 0.1f, 500);
-
-	Matrix4 mat4 = Matrix4(1);
-	mat4 = Matrix4::Rotation(Vector3(0, 1, 0), 50);
-
-	//std::cout << mat4 << std::endl;
+	std::cout << vec.Distance(vec2) << std::endl;
 
 	//END DEBUG MATH
 
