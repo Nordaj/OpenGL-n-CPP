@@ -1,7 +1,10 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 #include "Vector3.h"
+
+//y * 4 + x
 
 class Matrix4
 {
@@ -13,14 +16,27 @@ private:
 public:
 	Matrix4();
 	Matrix4(float diagonal);
+	Matrix4(std::vector<float> &Elements);
+
+	Matrix4 Transpose();
+	Matrix4 GetTransposed();
+
+	Matrix4 Add(const float value);
+	Matrix4 operator+(const float value);
+	Matrix4 operator+=(const float value);
+
+	Matrix4 Subtract(const float value);
+	Matrix4 operator-(const float value);
+	Matrix4 operator-=(const float value);
 
 	Matrix4 Multiply(const Matrix4 other);
 	Matrix4 operator*(const Matrix4 other);
 	Matrix4 operator*=(const Matrix4 other);
 
-	static Matrix4 Translation(Vector3 &translation);
-	static Matrix4 Rotation(Vector3 &axis, float angle);
-	static Matrix4 Scale(Vector3 &scale);
+	Matrix4 Translate(const Vector3 &translation);
+	Matrix4 Rotate(const Vector3 &axis, float angle);
+	Matrix4 Scale(const Vector3 &scale);
+
 	static Matrix4 Orthagraphic(float right, float left, float top, float bottom, float near, float far);
 	static Matrix4 Perspective(float fov, float aspect, float near, float far);
 

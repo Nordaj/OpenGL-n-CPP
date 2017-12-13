@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <vector>
 
 #include "Misc.h"
 #include "Vector3.h"
@@ -56,6 +57,88 @@ Matrix4::Matrix4(float diagonal)
 	elements[14] = 0;
 }
 
+Matrix4::Matrix4(std::vector<float> &Elements)
+{
+	for (int i = 0; i < 16; i++)
+		elements[i] = Elements[i];
+}
+
+Matrix4 Matrix4::Transpose()
+{
+	Matrix4 OG = *this;
+
+	for (int x = 0; x < 4; x++)
+	{
+		for (int y = 0; y < 4; y++)
+		{
+			elements[x * 4 + y] = OG.elements[y * 4 + x];
+		}
+	}
+
+	return *this;
+}
+
+Matrix4 Matrix4::GetTransposed()
+{
+	Matrix4 mat;
+
+	for (int x = 0; x < 4; x++)
+	{
+		for (int y = 0; y < 4; y++)
+		{
+			mat.elements[x * 4 + y] = elements[y * 4 + x];
+		}
+	}
+
+	return mat;
+}
+
+Matrix4 Matrix4::Add(const float value)
+{
+	Matrix4 mat = Matrix4();
+
+	for (int i = 0; i < sizeof(mat.elements) / sizeof(float); i++)
+		mat.elements[i] = elements[i] + value;
+
+	return mat;
+}
+
+Matrix4 Matrix4::operator+(const float value)
+{
+	return this->Add(value);
+}
+
+Matrix4 Matrix4::operator+=(const float value)
+{
+	for (int i = 0; i < sizeof(elements) / sizeof(float); i++)
+		elements[i] += value;
+
+	return *this;
+}
+
+Matrix4 Matrix4::Subtract(const float value)
+{
+	Matrix4 mat = Matrix4();
+
+	for (int i = 0; i < sizeof(mat.elements) / sizeof(float); i++)
+		mat.elements[i] = elements[i] - value;
+
+	return mat;
+}
+
+Matrix4 Matrix4::operator-(const float value)
+{
+	return this->Subtract(value);
+}
+
+Matrix4 Matrix4::operator-=(const float value)
+{
+	for (int i = 0; i < sizeof(elements) / sizeof(float); i++)
+		elements[i] -= value;
+
+	return *this;
+}
+
 Matrix4 Matrix4::Multiply(const Matrix4 other)
 {
 	Matrix4 mat = Matrix4(0.0f);
@@ -70,7 +153,6 @@ Matrix4 Matrix4::Multiply(const Matrix4 other)
 			float sum = 0;
 			for (int i = 0; i < 4; i++)
 			{
-				//y * 4 + x might be backwards idfk
 				sum += elements[i * 4 + x] * other.elements[y * 4 + i];
 			}
 			mat.elements[y * 4 + x] = sum;
@@ -91,54 +173,48 @@ Matrix4 Matrix4::operator*=(const Matrix4 other)
 	return *this;
 }
 
-Matrix4 Matrix4::Translation(Vector3 &translation)
+Matrix4 Matrix4::Translate(const Vector3 &translation)
 {
-	Matrix4 mat = Matrix4(1);
+	elements[12] = translation.x;
+	elements[13] = translation.y;
+	elements[14] = translation.z;
 
-	mat.elements[12] = translation.x;
-	mat.elements[13] = translation.y;
-	mat.elements[14] = translation.z;
-
-	return mat;
+	return *this;
 }
 
-Matrix4 Matrix4::Rotation(Vector3 &axis, float angle)
+Matrix4 Matrix4::Rotate(const Vector3 &axis, float angle)
 {
 	//MIGHT NOT WORK
 	//(did not match glm or an online rotation calc, we shall see if this works)
-
-	Matrix4 mat = Matrix4(1);
 
 	angle = Radians(angle);
 
 	float c = cos(angle);
 	float s = sin(angle);
 
-	mat.elements[0]  = axis.x * axis.x * ((1 - c) + c);
-	mat.elements[5]  = axis.y * axis.y * ((1 - c) + c);
-	mat.elements[10] = axis.z * axis.z * ((1 - c) + c);
+	elements[0]  = axis.x * axis.x * ((1 - c) + c);
+	elements[5]  = axis.y * axis.y * ((1 - c) + c);
+	elements[10] = axis.z * axis.z * ((1 - c) + c);
 
-	mat.elements[1] = (axis.x * axis.y) * (1 - c) + (axis.z * s);
-	mat.elements[2] = (axis.x * axis.z) * (1 - c) - (axis.y * s);
+	elements[1] = (axis.x * axis.y) * (1 - c) + (axis.z * s);
+	elements[2] = (axis.x * axis.z) * (1 - c) - (axis.y * s);
 
-	mat.elements[4] = (axis.y * axis.x) * (1 - c) - (axis.z * s);
-	mat.elements[6] = (axis.y * axis.z) * (1 - c) + (axis.x * s);
+	elements[4] = (axis.y * axis.x) * (1 - c) - (axis.z * s);
+	elements[6] = (axis.y * axis.z) * (1 - c) + (axis.x * s);
 
-	mat.elements[8] = (axis.z * axis.x) * (1 - c) + (axis.y * s);
-	mat.elements[9] = (axis.z * axis.y) * (1 - c) - (axis.x * s);
+	elements[8] = (axis.z * axis.x) * (1 - c) + (axis.y * s);
+	elements[9] = (axis.z * axis.y) * (1 - c) - (axis.x * s);
 
-	return mat;
+	return *this;
 }
 
-Matrix4 Matrix4::Scale(Vector3 &scale)
+Matrix4 Matrix4::Scale(const Vector3 &scale)
 {
-	Matrix4 mat = Matrix4(1);
+	elements[0] = scale.x;
+	elements[5] = scale.y;
+	elements[10] = scale.z;
 
-	mat.elements[0] = scale.x;
-	mat.elements[5] = scale.y;
-	mat.elements[10] = scale.z;
-
-	return mat;
+	return *this;
 }
 
 Matrix4 Matrix4::Orthagraphic(float right, float left, float top, float bottom, float near, float far)

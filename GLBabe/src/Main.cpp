@@ -23,9 +23,7 @@
 #include "Model.h"
 #include "LightManager.h"
 #include "HardCodedMeshes.h"
-#include "Math/Vector2.h"
-#include "Math/Vector3.h"
-#include "Math\Matrix4.h"
+#include "Math\Math.h"
 
 #include "Main.h"
 
@@ -33,15 +31,7 @@ int main()
 {
 	//DEBUG MATH
 
-	Vector3 vec = Vector3(3, 0, -7);
-	Vector3 vec2 = Vector3(20, 5, -0.0f);
-
-	float dot = vec.Dot(vec2);
-
-	Vector3 inf = Vector3(3, 2, -1);
-	//inf.Normalize();
-
-	std::cout << vec.Distance(vec2) << std::endl;
+	
 
 	//END DEBUG MATH
 
