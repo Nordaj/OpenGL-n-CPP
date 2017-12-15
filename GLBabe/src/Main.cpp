@@ -31,7 +31,16 @@ int main()
 {
 	//DEBUG MATH
 
-	
+	glm::quat mm = glm::quat();
+	mm.w = 1;
+	mm = glm::rotate(mm, glm::radians(45.0f), glm::vec3(0, 1, 0));
+	std::cout << "GLM: " << std::endl << "(" << mm.x << ", " << mm.y << ", " << mm.z << ", " << mm.w << ")" << std::endl;
+
+	Quaternion quat = Quaternion();
+	//quat.Rotate(45, Vector3(0, 1, 0));
+	quat.Rotate(Vector3(0, 45, 0));
+	std::cout << "Me: " << std::endl << quat << std::endl;
+	std::cout << quat.Magnitude() << std::endl;
 
 	//END DEBUG MATH
 
