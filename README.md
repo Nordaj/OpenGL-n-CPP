@@ -10,7 +10,6 @@ Just a personal project for learning OpenGL and better C++.
 <ul>
   <li>GLEW</li>
   <li>GLFW</li>
-  <li>GLM</li>
   <li>STB_IMAGE</li>
 </ul>
 (I would like to use as few as possible, looking to drop all but glew)
