@@ -190,12 +190,12 @@ Vector3 Vector3::operator/=(float value)
 
 bool Vector3::operator==(const Vector3 &other)
 {
-	return (x == other.x, y == other.y, z == other.z);
+	return (x == other.x && y == other.y && z == other.z);
 }
 
 bool Vector3::operator!=(const Vector3 &other)
 {
-	return !(x == other.x, y == other.y, z == other.z);
+	return !(x == other.x && y == other.y && z == other.z);
 }
 
 float Vector3::Dot(const Vector3 &first, const Vector3 &second)

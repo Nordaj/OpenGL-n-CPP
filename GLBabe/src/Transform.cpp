@@ -1,59 +1,61 @@
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
-#include <glm\gtx\quaternion.hpp>
 #include <iostream>
 #include <cmath>
 
+#include "Math\Math.h"
 #include "Transform.h"
 
-Transform::Transform ()
+Transform::Transform()
 {
-	position = glm::vec3(0.0f, 0.0f, 0.0f);
-	rotation = glm::mat4(1.0f);
-	scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	position = Vector3();
+	rotation = Quaternion();
+	scale = Vector3(1.0f, 1.0f, 1.0f);
 }
 
-Transform::Transform(glm::vec3 pos)
+Transform::Transform(Vector3 &pos)
 {
 	position = pos;
-	rotation = glm::mat4(1.0f);
-	scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	rotation = Quaternion();
+	scale = Vector3(1, 1, 1);
 }
 
-glm::mat4 Transform::GetMatrix()
+Matrix4 Transform::GetMatrix()
 {
-	glm::mat4 transform = glm::mat4(1.0f);
-
-	transform = glm::translate(transform, position);
-	transform *= rotation;
-	transform = glm::scale(transform, scale);
+	Matrix4 transform = Matrix4::TRS(position, rotation, scale);
 
 	return transform;
 }
 
-///Translate transform relative to current translation
-void Transform::Translate(glm::vec3 translation)
+void Transform::Translate(Vector3 &translation)
 {
 	position += translation;
 }
 
-void Transform::SetPosition(glm::vec3 Position)
+void Transform::SetPosition(Vector3 &Position)
 {
 	position = Position;
 }
 
-void Transform::Rotate(glm::vec3 dir, float amount)
+void Transform::Rotate(Vector3 &dir, float amount)
 {
-	rotation = glm::rotate(rotation, glm::radians(amount), dir);
+	rotation.Rotate(amount, dir);
 }
 
-void Transform::Scale(glm::vec3 sc)
+void Transform::Rotate(Vector3 &euler)
+{
+	rotation.Rotate(euler);
+}
+
+void Transform::SetRotation(Quaternion &quat)
+{
+	rotation = quat;
+}
+
+void Transform::Scale(Vector3 &sc)
 {
 	scale *= sc;
 }
 
-void Transform::SetScale(glm::vec3 sc)
+void Transform::SetScale(Vector3 &sc)
 {
 	scale = sc;
 }

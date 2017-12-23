@@ -40,10 +40,10 @@ Quaternion Quaternion::Rotate(float rot, Vector3 &axis)
 
 	rot = Radians(rot);
 
-	quat.x = axis.x * sin(rot / 2);
-	quat.y = axis.y * sin(rot / 2);
-	quat.z = axis.z * sin(rot / 2);
-	quat.w = cos(rot / 2);
+	quat.x = axis.x * sinf(rot / 2);
+	quat.y = axis.y * sinf(rot / 2);
+	quat.z = axis.z * sinf(rot / 2);
+	quat.w = cosf(rot / 2);
 
 	*this = quat * *this;
 
@@ -54,17 +54,17 @@ Quaternion Quaternion::Rotate(Vector3 &rot)
 {
 	Quaternion quat;
 
-	float cosX = cos(Radians(rot.x) / 2);
-	float cosY = cos(Radians(rot.y) / 2);
-	float cosZ = cos(Radians(rot.z) / 2);
-	float sinX = sin(Radians(rot.x) / 2);
-	float sinY = sin(Radians(rot.y) / 2);
-	float sinZ = sin(Radians(rot.z) / 2);
+	float cosX = cos(Radians(rot.x) * 0.5f);
+	float cosY = cos(Radians(rot.y) * 0.5f);
+	float cosZ = cos(Radians(rot.z) * 0.5f);
+	float sinX = sin(Radians(rot.x) * 0.5f);
+	float sinY = sin(Radians(rot.y) * 0.5f);
+	float sinZ = sin(Radians(rot.z) * 0.5f);
 
-	x = (cosZ * cosY * sinX) - (sinZ * sinY * cosX);
-	y = (cosZ * sinY * cosX) + (sinZ * cosY * sinX);
-	z = (sinZ * cosY * cosX) - (cosZ * sinY * sinX);
-	w = (cosZ * cosY * cosX) + (sinZ * sinY * sinX);
+	quat.x = (cosZ * cosY * sinX) - (sinZ * sinY * cosX);
+	quat.y = (cosZ * sinY * cosX) + (sinZ * cosY * sinX);
+	quat.z = (sinZ * cosY * cosX) - (cosZ * sinY * sinX);
+	quat.w = (cosZ * cosY * cosX) + (sinZ * sinY * sinX);
 
 	*this = quat * *this;
 
@@ -76,7 +76,7 @@ Quaternion Quaternion::Multiply(Quaternion &other)
 	Quaternion quat;
 
 	//(Q1 * Q2).x = (w1x2 + x1w2 + y1z2 - z1y2)
-	quat.x = (w * quat.x) + (x * other.w) + (y * other.z) - (z * other.y);
+	quat.x = (w * other.x) + (x * other.w) + (y * other.z) - (z * other.y);
 
 	//(Q1 * Q2).y = (w1y2 - x1z2 + y1w2 + z1x2)
 	quat.y = (w * other.y) - (x * other.z) + (y * other.w) + (z * other.x);

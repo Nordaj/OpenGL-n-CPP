@@ -1,11 +1,10 @@
-#include <glm\glm.hpp>
 #include <glew.h>
 #include <string>
 
 #include "Light.h"
 #include "SpotLight.h"
 
-SpotLight::SpotLight(glm::vec3 Direction, glm::vec3 Position, glm::vec3 Color, float Intensity, float Cutoff)
+SpotLight::SpotLight(Vector3 Direction, Vector3 Position, Vector3 Color, float Intensity, float Cutoff)
 {
 	direction = Direction;
 	position = Position;
@@ -38,7 +37,7 @@ void SpotLight::PassAll(unsigned int shader, std::string directionName, std::str
 
 	//Color
 	int colorLocation = glGetUniformLocation(shader, colorName.c_str());
-	glUniform3f(colorLocation, color.r, color.g, color.b);
+	glUniform3f(colorLocation, color.x, color.y, color.z);
 
 	//Intensity
 	int intensityLocation = glGetUniformLocation(shader, intensityName.c_str());

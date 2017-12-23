@@ -5,9 +5,6 @@
 #include <string>
 #include <glew.h>
 #include <glfw3.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
 #include <string>
 #include <vector>
 #include "Transform.h"
@@ -20,7 +17,7 @@
 #include "Texture.h"
 #include "Camera.h"
 #include "Mesh.h"
-#include "Model.h"
+#include "Object.h"
 #include "LightManager.h"
 #include "HardCodedMeshes.h"
 #include "Math\Math.h"
@@ -29,21 +26,6 @@
 
 int main()
 {
-	//DEBUG MATH
-
-	glm::quat mm = glm::quat();
-	mm.w = 1;
-	mm = glm::rotate(mm, glm::radians(45.0f), glm::vec3(0, 1, 0));
-	std::cout << "GLM: " << std::endl << "(" << mm.x << ", " << mm.y << ", " << mm.z << ", " << mm.w << ")" << std::endl;
-
-	Quaternion quat = Quaternion();
-	//quat.Rotate(45, Vector3(0, 1, 0));
-	quat.Rotate(Vector3(0, 45, 0));
-	std::cout << "Me: " << std::endl << quat << std::endl;
-	std::cout << quat.Magnitude() << std::endl;
-
-	//END DEBUG MATH
-
 	//Setup Game
 	if (Setup()) return 0;
 
@@ -66,44 +48,45 @@ int main()
 
 	//Light Stuff
 	LightManager lightManager = LightManager(shader, DEBUGLIGHTS);
-	lightManager.ambientLight = glm::vec3(0.1f, 0.1f, 0.1f);
-	lightManager.directionalLights.push_back(DirectionalLight(glm::vec3(-1, -0.7f, 0), glm::vec3(1, 0.9f, 0.9f), 0.2f));
-	lightManager.pointLights.push_back(PointLight(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0), 1));
-	lightManager.pointLights.push_back(PointLight(glm::vec3(-2, 0, 0), glm::vec3(1, 0, 0), 1));
-	lightManager.spotLights.push_back(SpotLight(glm::vec3(-1, 0, 0), glm::vec3(2, -1, -1), glm::vec3(0, 0, 1), 3, glm::cos(glm::radians(10.0f))));
+	lightManager.ambientLight = Vector3(0.1f, 0.1f, 0.1f);
+	lightManager.directionalLights.push_back(DirectionalLight(Vector3(-1, -0.7f, 0), Vector3(1, 0.9f, 0.9f), 0.2f));
+	lightManager.pointLights.push_back(PointLight(Vector3(0, 0, 0), Vector3(0, 1, 0), 1));
+	lightManager.pointLights.push_back(PointLight(Vector3(-2, 0, 0), Vector3(1, 0, 0), 1));
+	lightManager.spotLights.push_back(SpotLight(Vector3(-1, 0, 0), Vector3(2, -1, -1), Vector3(0, 0, 1), 3, cos(Radians(10.0f))));
 	//Spot lights are broken, recently found a problem (look at ground, should see a yellowish circle)
 
 	//Create camera
 	mainCamera = Camera();
-	mainCamera.position = glm::vec3(0, 0, 4);
+	mainCamera.position = Vector3(0, 0, 4);
 
 	//Create objects
-	Model models[] = {
+	Object models[] = {
 		//cubes
-		Model(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3(-1, -1,  1))),
-		Model(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3(-1,  1,  1))),
-		Model(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3( 1,  1,  1))),
-		Model(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3( 1, -1,  1))),
+		Object(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(Vector3(-1, -1,  1))),
+		Object(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(Vector3(-1,  1,  1))),
+		Object(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(Vector3( 1,  1,  1))),
+		Object(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(Vector3( 1, -1,  1))),
 		
-		Model(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3(-1, -1, -1))),
-		Model(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3(-1,  1, -1))),
-		Model(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3( 1,  1, -1))),
-		Model(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3( 1, -1, -1))),
+		Object(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(Vector3(-1, -1, -1))),
+		Object(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(Vector3(-1,  1, -1))),
+		Object(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(Vector3( 1,  1, -1))),
+		Object(Mesh(cubeVertices, cubeIndices, diffuse, specular, shader), 1, shader, Transform(Vector3( 1, -1, -1))),
 		
-		Model(Mesh(pyramidVertices, pyramidIndices, diffuse, specular, shader), 1, shader, Transform(glm::vec3(0, 0, -3))),
+		//pyramid
+		Object(Mesh(pyramidVertices, pyramidIndices, diffuse, specular, shader), 1, shader, Transform(Vector3(0, 0, -3))),
 
 		//quad
-		Model(Mesh(quadVertices, quadIndices, ground, specular, shader), 0, shader, Transform(glm::vec3(0, -2, 0)))
+		Object(Mesh(quadVertices, quadIndices, ground, specular, shader), 0, shader, Transform(Vector3(0, -2, 0)))
 	};
 
 	//Set ground scale
-	models[9].transform.SetScale(glm::vec3(4, 1, 4));
+	models[9].transform.SetScale(Vector3(4, 1, 4));
 
-	//Set default rotations
-	models[0].transform.Rotate(glm::vec3(0.2f, 0.9f, 0), 100);
-	models[2].transform.Rotate(glm::vec3(0.123f, 0.65f, 0.2f), 32);
-	models[5].transform.Rotate(glm::vec3(0.5f, 0.93f, 0), 164);
-	models[6].transform.Rotate(glm::vec3(0.1f, 0.9f, 0.8f), 63);
+	//Set default rotations TODO: set with euler for readability
+	models[0].transform.Rotate(Vector3(20, 90, 0));
+	models[2].transform.Rotate(Vector3(23, 65, 38));
+	models[5].transform.Rotate(Vector3(0, 0, 45));
+	models[6].transform.Rotate(Vector3(50, 10, 0));
 
 	//Lock Cursor
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -122,22 +105,22 @@ int main()
 		mainCamera.position.x = xPos;
 
 		//Rotate cube and pyramid
-		models[3].transform.Rotate(glm::vec3(0.4f, 0.2f, 0.7f), 100 * (float) deltaTime);
-		models[8].transform.Rotate(glm::vec3(1, 1, 0), 100 * (float) deltaTime);
+		models[3].transform.Rotate(Vector3(40, 0, 0) * (float) deltaTime);
+		models[8].transform.Rotate(Vector3(100, 100, 0) * (float) deltaTime);
 
 		//Calculate view/perspectives
-		glm::mat4 viewMat = mainCamera.GetView();
-		glm::mat4 perspectiveMat = mainCamera.GetProjection();
+		Matrix4 viewMat = mainCamera.GetView();
+		Matrix4 perspectiveMat = mainCamera.GetProjection();
 
 		//Decide if first model (with specific shader)
 		bool first = true;
 
 		//Draw models
-		for (int i = 0; i < sizeof(models) / sizeof(Model); i++) 
+		for (int i = 0; i < sizeof(models) / sizeof(Object); i++)
 		{
 			models[i].Update((float) deltaTime);
 
-			models[i].Render(viewMat, perspectiveMat, mainCamera.position, &lightManager, first);
+			models[i].Render(viewMat, perspectiveMat, mainCamera.position, lightManager, first);
 
 			first = false;
 		}

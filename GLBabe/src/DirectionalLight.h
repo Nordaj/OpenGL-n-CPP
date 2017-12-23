@@ -1,15 +1,16 @@
 #pragma once
 
-#include <glm\glm.hpp>
 #include <string>
+
+#include "Math\Math.h"
 #include "Light.h"
 
 class DirectionalLight : public Light
 {
 public:
-	glm::vec3 direction;
+	Vector3 direction;
 
-	DirectionalLight(glm::vec3 Direction, glm::vec3 Color, float Intensity);
+	DirectionalLight(Vector3 Direction, Vector3 Color, float Intensity);
 	void PassDirection(unsigned int shader, std::string name);
 	void PassAll(unsigned int shader, std::string directionName, std::string colorName, std::string intensityName);
 };

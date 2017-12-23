@@ -1,22 +1,24 @@
 #pragma once
 
-#include <glm\glm.hpp>
+#include "Math/Math.h"
 
 
 class Transform 
 {
 public:
 	Transform();
-	Transform(glm::vec3 pos);
-	glm::mat4 GetMatrix();
-	void Translate(glm::vec3 translation);
-	void Transform::SetPosition(glm::vec3 Position);
-	void Rotate(glm::vec3 dir, float amount);
-	void Scale(glm::vec3 sc);
-	void SetScale(glm::vec3 sc);
+	Transform(Vector3 &pos);
+	Matrix4 GetMatrix();
+	void Translate(Vector3 &translation);
+	void Transform::SetPosition(Vector3 &Position);
+	void Rotate(Vector3 &dir, float amount);
+	void Rotate(Vector3 &euler);
+	void SetRotation(Quaternion &quat);
+	void Scale(Vector3 &sc);
+	void SetScale(Vector3 &sc);
 
 private: 
-	glm::vec3 position;
-	glm::mat4 rotation;
-	glm::vec3 scale;
+	Vector3 position;
+	Quaternion rotation;
+	Vector3 scale;
 };

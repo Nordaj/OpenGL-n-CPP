@@ -1,11 +1,11 @@
-#include <glm\glm.hpp>
 #include <glew.h>
 #include <string>
 
+#include "Math\Math.h"
 #include "Light.h"
 #include "PointLight.h"
 
-PointLight::PointLight(glm::vec3 Position, glm::vec3 Color, float Intensity)
+PointLight::PointLight(Vector3 Position, Vector3 Color, float Intensity)
 {
 	position = Position;
 	color = Color;

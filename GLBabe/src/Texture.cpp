@@ -1,5 +1,4 @@
 #include <stb_image.h>
-#include <glm\glm.hpp>
 #include <glew.h>
 
 #include "Texture.h"

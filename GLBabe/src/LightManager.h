@@ -1,10 +1,10 @@
 #pragma once
 
-#include <glm\glm.hpp>
 #include <vector>
 #include "PointLight.h"
 #include "DirectionalLight.h"
 #include "SpotLight.h"
+#include "Math\Math.h"
 #include "Transform.h"
 
 class LightManager
@@ -13,13 +13,13 @@ public:
 	std::vector<DirectionalLight> directionalLights;
 	std::vector<PointLight> pointLights;
 	std::vector<SpotLight> spotLights;
-	glm::vec3 ambientLight;
+	Vector3 ambientLight;
 
 	LightManager();
 	LightManager(unsigned int Shader, bool DebugMode = false);
-	LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, std::vector<SpotLight> SpotLights, glm::vec3 AmbientLight, bool DebugMode = true);
+	LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, std::vector<SpotLight> SpotLights, Vector3 AmbientLight, bool DebugMode = true);
 	void UpdateLighting(unsigned int shad = -1);
-	void DrawDebug(glm::mat4 view, glm::mat4 projection);
+	void DrawDebug(Matrix4 view, Matrix4 projection);
 
 private:
 	bool debugRender;

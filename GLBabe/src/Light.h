@@ -1,12 +1,13 @@
 #pragma once
 
-#include <glm\glm.hpp>
 #include <string>
+
+#include "Math\Math.h"
 
 class Light 
 {
 public: 
-	glm::vec3 color;
+	Vector3 color;
 	float intensity;
 
 	Light();

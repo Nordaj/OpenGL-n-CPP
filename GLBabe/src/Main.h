@@ -3,13 +3,12 @@
 //Includes
 #include <glew.h>
 #include <glfw3.h>
-#include <glm\glm.hpp>
 
 #include "Camera.h"
 
 //Defines
 #define WIREFRAMEMODE false
-#define VSYNC true
+#define VSYNC false
 #define WIDTH 500
 #define HEIGHT 500
 #define WINDOWNAME "Hey"
@@ -17,8 +16,8 @@
 
 //Variables
 GLFWwindow *window;
-Camera mainCamera; //TODO find solution
-glm::vec4 backgroundColor(0.02f, 0.02f, 0.02f, 1.0f);
+Camera mainCamera;
+Vector4 backgroundColor(0.02f, 0.02f, 0.02f, 1.0f);
 float specularity = 1.3f;
 double frameStartTime;
 double deltaTime;

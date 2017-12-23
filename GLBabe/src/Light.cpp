@@ -1,12 +1,12 @@
-#include <glm\glm.hpp>
 #include <glew.h>
 #include <string>
 
+#include "Math\Math.h"
 #include "Light.h"
 
 Light::Light()
 {
-	color = glm::vec3(1, 0, 0);
+	color = Vector3(1, 0, 0);
 	intensity = 1;
 }
 

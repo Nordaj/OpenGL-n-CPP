@@ -1,28 +1,26 @@
 #pragma once
 
-//Includes
-#include <glm\glm.hpp>
+#include "Math/Math.h"
 
 class Camera
 {
 public:
-	glm::vec3 position;
-	glm::quat rotation;
+	Vector3 position;
+	Quaternion rotation;
 
 	Camera();
-	Camera(glm::vec3 Position, float Pov = 60, float Aspect = 1, float Near = 0.1f, float Far = 500);
-	//(F means first, only engine calls it first time so i can set to true and the rest each frame doesnt need to calculate but just pass)
-	glm::mat4 GetView();
-	glm::mat4 GetProjection();
+	Camera(Vector3 Position, float Fov = 60, float Aspect = 1, float Near = 0.1f, float Far = 500);
+	Matrix4 GetView();
+	Matrix4 GetProjection();
 	void UpdateAspect(float aspect);
-	void Rotate(glm::vec3 axis, float amount);
+	void Rotate(Vector3 axis, float amount);
 
 private: 
 	bool first;
-	float pov;
+	float fov;
 	float aspect;
 	float near;
 	float far;
-	glm::mat4 view;
-	glm::mat4 projection;
+	Matrix4 view;
+	Matrix4 projection;
 };

@@ -5,7 +5,18 @@
 class Vector3
 {
 public:
-	float x, y, z;
+	union 
+	{
+		struct 
+		{
+			float x, y, z;
+		};
+
+		struct 
+		{
+			float r, g, b;
+		};
+	};
 
 private:
 

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "Vector3.h"
+#include "Quaternion.h"
 
 //y * 4 + x
 
@@ -29,14 +30,16 @@ public:
 	Matrix4 operator-(const float value);
 	Matrix4 operator-=(const float value);
 
-	Matrix4 Multiply(const Matrix4 other);
-	Matrix4 operator*(const Matrix4 other);
-	Matrix4 operator*=(const Matrix4 other);
+	Matrix4 Multiply(const Matrix4 &o);
+	Matrix4 operator*(const Matrix4 &other);
+	Matrix4 operator*=(const Matrix4 &other);
 
 	Matrix4 Translate(const Vector3 &translation);
 	Matrix4 Rotate(const Vector3 &axis, float angle);
+	Matrix4 Rotate(Quaternion &quat);
 	Matrix4 Scale(const Vector3 &scale);
 
+	static Matrix4 TRS(Vector3 &translation, Quaternion &rotation, Vector3 &scale);
 	static Matrix4 Orthagraphic(float right, float left, float top, float bottom, float near, float far);
 	static Matrix4 Perspective(float fov, float aspect, float near, float far);
 

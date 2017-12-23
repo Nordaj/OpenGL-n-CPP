@@ -1,4 +1,3 @@
-#include <glm\glm.hpp>
 #include <glew.h>
 #include <string>
 #include <vector>
@@ -10,6 +9,7 @@
 #include "Camera.h"
 #include "HardCodedMeshes.h"
 
+#include "Math\Math.h"
 #include "LightManager.h"
 
 LightManager::LightManager()
@@ -27,7 +27,7 @@ LightManager::LightManager(unsigned int Shader, bool DebugMode)
 	}
 }
 
-LightManager::LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, std::vector<SpotLight> SpotLights, glm::vec3 AmbientLight, bool DebugMode)
+LightManager::LightManager(unsigned int Shader, std::vector<DirectionalLight> DirectionalLights, std::vector<PointLight> PointLights, std::vector<SpotLight> SpotLights, Vector3 AmbientLight, bool DebugMode)
 {
 	shader = Shader;
 	directionalLights = DirectionalLights;
@@ -50,7 +50,7 @@ void LightManager::SetupDebug()
 	glUseProgram(debugShader);
 
 	//Set scale
-	transform.SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
+	transform.SetScale(Vector3(0.2f, 0.2f, 0.2f));
 
 	//---Setup mesh---//
 	//Gen and bind VAO
@@ -119,7 +119,7 @@ void LightManager::UpdateLighting(unsigned int shad)
 	PassV3(shader, "uAmbient", ambientLight);
 }
 
-void LightManager::DrawDebug(glm::mat4 view, glm::mat4 projection)
+void LightManager::DrawDebug(Matrix4 view, Matrix4 projection)
 {
 	//Use shader
 	glUseProgram(debugShader);
@@ -135,7 +135,7 @@ void LightManager::DrawDebug(glm::mat4 view, glm::mat4 projection)
 		transform.SetPosition(pointLights[i].position);
 
 		//Calc mat
-		glm::mat4 MVP = projection * view * transform.GetMatrix();
+		Matrix4 MVP = projection * view * transform.GetMatrix();
 
 		//Pass color
 		PassV3(debugShader, "uColor", pointLights[i].color);
@@ -154,7 +154,7 @@ void LightManager::DrawDebug(glm::mat4 view, glm::mat4 projection)
 		transform.SetPosition(spotLights[i].position);
 
 		//Calc mat
-		glm::mat4 MVP = projection * view * transform.GetMatrix();
+		Matrix4 MVP = projection * view * transform.GetMatrix();
 
 		//Pass color
 		PassV3(debugShader, "uColor", spotLights[i].color);

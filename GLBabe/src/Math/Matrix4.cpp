@@ -4,7 +4,6 @@
 
 #include "Misc.h"
 #include "Vector3.h"
-
 #include "Matrix4.h"
 
 Matrix4::Matrix4()
@@ -139,10 +138,32 @@ Matrix4 Matrix4::operator-=(const float value)
 	return *this;
 }
 
-Matrix4 Matrix4::Multiply(const Matrix4 other)
+Matrix4 Matrix4::Multiply(const Matrix4 &o)
 {
-	Matrix4 mat = Matrix4(0.0f);
+	Matrix4 mat = Matrix4(0);
 
+	mat.elements[0] = (elements[0] * o.elements[0]) + (elements[4] * o.elements[1]) + (elements[8] * o.elements[2]) + (elements[12] * o.elements[3]);
+	mat.elements[1] = (elements[1] * o.elements[0]) + (elements[5] * o.elements[1]) + (elements[9] * o.elements[2]) + (elements[13] * o.elements[3]);
+	mat.elements[2] = (elements[2] * o.elements[0]) + (elements[6] * o.elements[1]) + (elements[10] * o.elements[2]) + (elements[14] * o.elements[3]);
+	mat.elements[3] = (elements[3] * o.elements[0]) + (elements[7] * o.elements[1]) + (elements[11] * o.elements[2]) + (elements[15] * o.elements[3]);
+
+	mat.elements[4] = (elements[0] * o.elements[4]) + (elements[4] * o.elements[5]) + (elements[8] * o.elements[6]) + (elements[12] * o.elements[7]);
+	mat.elements[5] = (elements[1] * o.elements[4]) + (elements[5] * o.elements[5]) + (elements[9] * o.elements[6]) + (elements[13] * o.elements[7]);
+	mat.elements[6] = (elements[2] * o.elements[4]) + (elements[6] * o.elements[5]) + (elements[10] * o.elements[6]) + (elements[14] * o.elements[7]);
+	mat.elements[7] = (elements[3] * o.elements[4]) + (elements[7] * o.elements[5]) + (elements[11] * o.elements[6]) + (elements[15] * o.elements[7]);
+
+	mat.elements[8] = (elements[0] * o.elements[8]) + (elements[4] * o.elements[9]) + (elements[8] * o.elements[10]) + (elements[12] * o.elements[11]);
+	mat.elements[9] = (elements[1] * o.elements[8]) + (elements[5] * o.elements[9]) + (elements[9] * o.elements[10]) + (elements[13] * o.elements[11]);
+	mat.elements[10] = (elements[2] * o.elements[8]) + (elements[6] * o.elements[9]) + (elements[10] * o.elements[10]) + (elements[14] * o.elements[11]);
+	mat.elements[11] = (elements[3] * o.elements[8]) + (elements[7] * o.elements[9]) + (elements[11] * o.elements[10]) + (elements[15] * o.elements[11]);
+
+	mat.elements[12] = (elements[0] * o.elements[12]) + (elements[4] * o.elements[13]) + (elements[8] * o.elements[14]) + (elements[12] * o.elements[15]);
+	mat.elements[13] = (elements[1] * o.elements[12]) + (elements[5] * o.elements[13]) + (elements[9] * o.elements[14]) + (elements[13] * o.elements[15]);
+	mat.elements[14] = (elements[2] * o.elements[12]) + (elements[6] * o.elements[13]) + (elements[10] * o.elements[14]) + (elements[14] * o.elements[15]);
+	mat.elements[15] = (elements[3] * o.elements[12]) + (elements[7] * o.elements[13]) + (elements[11] * o.elements[14]) + (elements[15] * o.elements[15]);
+	//Is this a good way to do it? 
+
+	/*
 	//Row
 	for (int y = 0; y < 4; y++)
 	{
@@ -158,63 +179,114 @@ Matrix4 Matrix4::Multiply(const Matrix4 other)
 			mat.elements[y * 4 + x] = sum;
 		}
 	}
+	*/
 
 	return mat;
 }
 
-Matrix4 Matrix4::operator*(const Matrix4 other)
+Matrix4 Matrix4::operator*(const Matrix4 &other)
 {
 	return this->Multiply(other);
 }
 
-Matrix4 Matrix4::operator*=(const Matrix4 other)
+Matrix4 Matrix4::operator*=(const Matrix4 &other)
 {
 	*this = this->Multiply(other);
 	return *this;
 }
 
+//TODO: Make relative
 Matrix4 Matrix4::Translate(const Vector3 &translation)
 {
-	elements[12] = translation.x;
-	elements[13] = translation.y;
-	elements[14] = translation.z;
+	Matrix4 mat = Matrix4(1);
+
+	mat.elements[12] = translation.x;
+	mat.elements[13] = translation.y;
+	mat.elements[14] = translation.z;
+
+	*this *= mat;
 
 	return *this;
 }
 
+//TODO: Make relative
 Matrix4 Matrix4::Rotate(const Vector3 &axis, float angle)
 {
 	//MIGHT NOT WORK
 	//(did not match glm or an online rotation calc, we shall see if this works)
+
+	Matrix4 mat = Matrix4(1);
 
 	angle = Radians(angle);
 
 	float c = cos(angle);
 	float s = sin(angle);
 
-	elements[0]  = axis.x * axis.x * ((1 - c) + c);
-	elements[5]  = axis.y * axis.y * ((1 - c) + c);
-	elements[10] = axis.z * axis.z * ((1 - c) + c);
+	mat.elements[0]  = axis.x * axis.x * ((1 - c) + c);
+	mat.elements[5]  = axis.y * axis.y * ((1 - c) + c);
+	mat.elements[10] = axis.z * axis.z * ((1 - c) + c);
 
-	elements[1] = (axis.x * axis.y) * (1 - c) + (axis.z * s);
-	elements[2] = (axis.x * axis.z) * (1 - c) - (axis.y * s);
+	mat.elements[1] = (axis.x * axis.y) * (1 - c) + (axis.z * s);
+	mat.elements[2] = (axis.x * axis.z) * (1 - c) - (axis.y * s);
 
-	elements[4] = (axis.y * axis.x) * (1 - c) - (axis.z * s);
-	elements[6] = (axis.y * axis.z) * (1 - c) + (axis.x * s);
+	mat.elements[4] = (axis.y * axis.x) * (1 - c) - (axis.z * s);
+	mat.elements[6] = (axis.y * axis.z) * (1 - c) + (axis.x * s);
 
-	elements[8] = (axis.z * axis.x) * (1 - c) + (axis.y * s);
-	elements[9] = (axis.z * axis.y) * (1 - c) - (axis.x * s);
+	mat.elements[8] = (axis.z * axis.x) * (1 - c) + (axis.y * s);
+	mat.elements[9] = (axis.z * axis.y) * (1 - c) - (axis.x * s);
+
+	*this *= mat;
 
 	return *this;
 }
 
-Matrix4 Matrix4::Scale(const Vector3 &scale)
+//TODO: Make relative
+Matrix4 Matrix4::Rotate(Quaternion &quat)
 {
-	elements[0] = scale.x;
-	elements[5] = scale.y;
-	elements[10] = scale.z;
+	Matrix4 mat = Matrix4(1);
+
+	//Diagonal
+	mat.elements[0]  = 1 - (2 * (quat.y * quat.y)) - (2 * (quat.z * quat.z));
+	mat.elements[5]  = 1 - (2 * (quat.x * quat.x)) - (2 * (quat.z * quat.z));
+	mat.elements[10] = 1 - (2 * (quat.x * quat.x)) - (2 * (quat.y * quat.y));
+
+	mat.elements[4] = (2 * (quat.x * quat.y)) - (2 * (quat.w * quat.z));
+	mat.elements[8] = (2 * (quat.x * quat.z)) + (2 * (quat.w * quat.y));
+
+	mat.elements[1] = (2 * (quat.x * quat.y)) + (2 * (quat.w * quat.z));
+	mat.elements[9] = (2 * (quat.y * quat.z)) - (2 * (quat.w * quat.x));
+
+	mat.elements[2] = (2 * (quat.x * quat.z)) - (2 * (quat.w * quat.y));
+	mat.elements[6] = (2 * (quat.y * quat.z)) + (2 * (quat.w * quat.x));
+
+	*this *= mat;
 
 	return *this;
+}
+
+//TODO: Make relative
+Matrix4 Matrix4::Scale(const Vector3 &scale)
+{
+	Matrix4 mat = Matrix4(1);
+
+	mat.elements[0] = scale.x;
+	mat.elements[5] = scale.y;
+	mat.elements[10] = scale.z;
+
+	*this *= mat;
+
+	return *this;
+}
+
+Matrix4 Matrix4::TRS(Vector3 &translation, Quaternion &rotation, Vector3 &scale)
+{
+	Matrix4 mat = Matrix4(1);
+
+	mat.Translate(translation);
+	mat.Rotate(rotation);
+	mat.Scale(scale);
+
+	return mat;
 }
 
 Matrix4 Matrix4::Orthagraphic(float right, float left, float top, float bottom, float near, float far)

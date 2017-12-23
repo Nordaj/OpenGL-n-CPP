@@ -1,11 +1,11 @@
-#include <glm\glm.hpp>
 #include <glew.h>
 #include <string>
 
 #include "Light.h"
+#include "Math\Math.h"
 #include "DirectionalLight.h"
 
-DirectionalLight::DirectionalLight(glm::vec3 Direction, glm::vec3 Color, float Intensity)
+DirectionalLight::DirectionalLight(Vector3 Direction, Vector3 Color, float Intensity)
 {
 	direction = Direction;
 	color = Color;
