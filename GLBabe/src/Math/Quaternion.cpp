@@ -2,6 +2,7 @@
 
 #include "Vector3.h"
 #include "Misc.h"
+#include "Matrix4.h"
 
 #include "Quaternion.h"
 
@@ -9,9 +10,15 @@ Quaternion::Quaternion()
 	:x(0), y(0), z(0), w(1)
 { }
 
-Quaternion::Quaternion(Vector3 vec, float W)
-	: x(vec.x), y(vec.y), z(vec.z), w(W)
-{ }
+Quaternion::Quaternion(Vector3 &axis, float angle)
+{
+	angle = Radians(angle);
+
+	x = axis.x * sinf(angle * 0.5f);
+	y = axis.y * sinf(angle * 0.5f);
+	z = axis.z * sinf(angle * 0.5f);
+	w = cosf(angle * 2);
+}
 
 Quaternion::Quaternion(float X, float Y, float Z, float W)
 	:x(X), y(Y), z(Z), w(W)
@@ -34,15 +41,15 @@ Quaternion Quaternion::Normalize()
 	return *this;
 }
 
-Quaternion Quaternion::Rotate(float rot, Vector3 &axis)
+Quaternion Quaternion::Rotate(Vector3 &axis, float rot)
 {
 	Quaternion quat;
 
 	rot = Radians(rot);
 
-	quat.x = axis.x * sinf(rot / 2);
-	quat.y = axis.y * sinf(rot / 2);
-	quat.z = axis.z * sinf(rot / 2);
+	quat.x = axis.x * sinf(rot * 0.5f);
+	quat.y = axis.y * sinf(rot * 0.5f);
+	quat.z = axis.z * sinf(rot * 0.5f);
 	quat.w = cosf(rot / 2);
 
 	*this = quat * *this;
@@ -73,6 +80,9 @@ Quaternion Quaternion::Rotate(Vector3 &rot)
 
 Quaternion Quaternion::Multiply(Quaternion &other)
 {
+	//Cannot handle 0's when all else are not
+	//non precise roll negatively effects yaw
+
 	Quaternion quat;
 
 	//(Q1 * Q2).x = (w1x2 + x1w2 + y1z2 - z1y2)
@@ -100,7 +110,7 @@ Quaternion Quaternion::operator*=(Quaternion &other)
 	Quaternion quat;
 
 	//(Q1 * Q2).x = (w1x2 + x1w2 + y1z2 - z1y2)
-	x = (w * quat.x) + (x * other.w) + (y * other.z) - (z * other.y);
+	x = (w * other.x) + (x * other.w) + (y * other.z) - (z * other.y);
 
 	//(Q1 * Q2).y = (w1y2 - x1z2 + y1w2 + z1x2)
 	y = (w * other.y) - (x * other.z) + (y * other.w) + (z * other.x);
@@ -112,6 +122,15 @@ Quaternion Quaternion::operator*=(Quaternion &other)
 	w = (w * other.w) - (x * other.x) - (y * other.y) - (z * other.z);
 
 	return *this;
+}
+
+Quaternion Quaternion::FromEuler(Vector3 &euler)
+{
+	Quaternion quat = Quaternion();
+	quat.Rotate(Vector3(1, 0, 0), euler.x);
+	quat.Rotate(Vector3(0, 1, 0), euler.y);
+	quat.Rotate(Vector3(0, 0, 1), euler.z);
+	return quat;
 }
 
 std::ostream &operator<<(std::ostream &stream, Quaternion &quat)

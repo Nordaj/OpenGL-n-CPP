@@ -27,6 +27,11 @@ void Vector3::Normalize()
 	*this /= this->Magnitude();
 }
 
+Vector3 Vector3::Normalized()
+{
+	return *this / this->Magnitude();
+}
+
 Vector3 Vector3::Cross(const Vector3 &other)
 {
 	Vector3 vect = Vector3();

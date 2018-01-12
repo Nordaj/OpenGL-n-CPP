@@ -37,7 +37,7 @@ void Transform::SetPosition(Vector3 &Position)
 
 void Transform::Rotate(Vector3 &dir, float amount)
 {
-	rotation.Rotate(amount, dir);
+	rotation.Rotate(dir, amount);
 }
 
 void Transform::Rotate(Vector3 &euler)

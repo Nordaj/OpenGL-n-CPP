@@ -28,6 +28,7 @@ public:
 	float Magnitude();
 	float QMag();
 	void Normalize();
+	Vector3 Normalized();
 	Vector3 Cross(const Vector3 &other);
 	float Distance(const Vector3 &other);
 

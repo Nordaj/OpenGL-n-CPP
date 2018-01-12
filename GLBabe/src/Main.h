@@ -21,6 +21,14 @@ Vector4 backgroundColor(0.02f, 0.02f, 0.02f, 1.0f);
 float specularity = 1.3f;
 double frameStartTime;
 double deltaTime;
+Vector3 camEuler;
+
+double lastX;
+double lastY;
+double currentX;
+double currentY;
+Vector2 mouseIn;
+float sensitivity = 50;
 
 //Functions
 int Setup();

@@ -26,6 +26,10 @@
 
 int main()
 {
+	//std::cin.get();
+	//std::cin.get();
+	//return 0;
+
 	//Setup Game
 	if (Setup()) return 0;
 
@@ -89,7 +93,7 @@ int main()
 	models[6].transform.Rotate(Vector3(50, 10, 0));
 
 	//Lock Cursor
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	//Main loop
 	while (!glfwWindowShouldClose(window))
@@ -101,8 +105,17 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//Move cam for fun
-		float xPos = (float) sin(glfwGetTime() * 2);
-		mainCamera.position.x = xPos;
+		//float xPos = (float) sin(glfwGetTime() * 2);
+		//mainCamera.position.x = xPos;
+
+		//Camera Controls
+		glfwGetCursorPos(window, &currentX, &currentY);
+		mouseIn = Vector2(currentX - lastX, currentY - lastY);
+		glfwGetCursorPos(window, &lastX, &lastY);
+
+		//Cheap way to do it, i just keep track of euler instead of conversion. need to make matrix conversion before i make quat conversion
+		camEuler += Vector3(mouseIn.y * (float)deltaTime * sensitivity, mouseIn.x * (float)deltaTime * sensitivity, 0);
+		mainCamera.rotation = Quaternion::FromEuler(camEuler);
 
 		//Rotate cube and pyramid
 		models[3].transform.Rotate(Vector3(40, 0, 0) * (float) deltaTime);

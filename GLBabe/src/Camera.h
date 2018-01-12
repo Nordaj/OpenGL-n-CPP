@@ -13,7 +13,8 @@ public:
 	Matrix4 GetView();
 	Matrix4 GetProjection();
 	void UpdateAspect(float aspect);
-	void Rotate(Vector3 axis, float amount);
+	void Rotate(Vector3 &axis, float amount);
+	void Rotate(Vector3 &euler);
 
 private: 
 	bool first;

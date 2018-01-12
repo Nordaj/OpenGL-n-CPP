@@ -33,14 +33,24 @@ Camera::Camera(Vector3 Position, float Fov, float Aspect, float Near, float Far)
 	projection = Matrix4(1);
 }
 
-void Camera::Rotate(Vector3 axis, float amount)
+void Camera::Rotate(Vector3 &axis, float amount)
 {
-	rotation.Rotate(amount, axis);
+	rotation.Rotate(axis, amount);
+}
+
+void Camera::Rotate(Vector3 &euler)
+{
+	rotation.Rotate(euler);
 }
 
 Matrix4 Camera::GetView()
 {
-	view = Matrix4::TRS(position * -1, rotation, Vector3(1, 1, 1));
+	//view = Matrix4::TRS(position * -1, rotation, Vector3(1, 1, 1));
+
+	view = Matrix4(1);
+
+	view.Rotate(rotation);
+	view.Translate(position * -1);
 
 	return view;
 }
