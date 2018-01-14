@@ -28,7 +28,7 @@ double lastY;
 double currentX;
 double currentY;
 Vector2 mouseIn;
-float sensitivity = 50;
+float sensitivity = 200;
 
 //Functions
 int Setup();

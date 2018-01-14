@@ -26,8 +26,20 @@
 
 int main()
 {
-	//std::cin.get();
-	//std::cin.get();
+	//MATH
+
+	Matrix3 mat = Matrix3();
+	mat.m12 = 3;
+	mat.m10 = 5;
+	mat.m00 = 2;
+	mat.m02 = 2;
+
+	std::cout << mat * mat.Inverse() << std::endl;
+
+	//END MATH
+
+	std::cin.get();
+	std::cin.get();
 	//return 0;
 
 	//Setup Game
