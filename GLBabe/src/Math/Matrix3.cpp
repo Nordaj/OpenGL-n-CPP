@@ -146,6 +146,13 @@ Matrix3 Matrix3::Inverse() const
 	return temp;
 }
 
+bool Matrix3::IsOtho() const
+{
+	Matrix3 mat = *this * Inverse();
+	bool x = (mat == Matrix3(1));
+	return ((*this * Inverse()) == Matrix3());
+}
+
 Matrix3 Matrix3::Multiply(const Matrix3 &other)
 {
 	*this = Multiply(*this, other);
@@ -182,28 +189,65 @@ Matrix3 Matrix3::operator/=(float other)
 
 Matrix3 Matrix3::Rotate(const Vector3 &axis, float angle)
 {
+	/* ---This method does not keep determinate as 1---
 	Matrix3 mat = Matrix3();
+	Vector3 a = axis.Normalized();
 
 	angle = Radians(angle);
 
 	float c = cos(angle);
 	float s = sin(angle);
 
-	mat.e[0] = axis.x * axis.x * ((1 - c) + c);
-	mat.e[4] = axis.y * axis.y * ((1 - c) + c);
-	mat.e[8] = axis.z * axis.z * ((1 - c) + c);
+	mat.e[0] = a.x * a.x * ((1 - c) + c);
+	mat.e[4] = a.y * a.y * ((1 - c) + c);
+	mat.e[8] = a.z * a.z * ((1 - c) + c);
 
-	mat.e[1] = (axis.x * axis.y) * (1 - c) + (axis.z * s);
-	mat.e[2] = (axis.x * axis.z) * (1 - c) - (axis.z * s);
+	mat.e[1] = (a.x * a.y) * (1 - c) + (a.z * s);
+	mat.e[2] = (a.x * a.z) * (1 - c) - (a.z * s);
 
-	mat.e[3] = (axis.y * axis.x) * (1 - c) - (axis.z * s);
-	mat.e[5] = (axis.y * axis.z) * (1 - c) + (axis.x * s);
+	mat.e[3] = (a.y * a.x) * (1 - c) - (a.z * s);
+	mat.e[5] = (a.y * a.z) * (1 - c) + (a.x * s);
 
-	mat.e[6] = (axis.z * axis.x) * (1 - c) + (axis.y * s);
-	mat.e[7] = (axis.y * axis.z) * (1 - c) - (axis.x * s);
+	mat.e[6] = (a.z * a.x) * (1 - c) + (a.y * s);
+	mat.e[7] = (a.y * a.z) * (1 - c) - (a.x * s);
 
 	*this *= mat;
 
+	return *this;
+	*/
+
+	//---Algorithm from Foundations of Game Engine Development, pg 64, written differently---
+
+	Matrix3 mat = Matrix3();
+	Vector3 a = axis.Normalized();
+
+	angle = Radians(angle);
+
+	float c = cos(angle);
+	float s = sin(angle);
+	float mc = 1 - c;
+
+	float x = a.x * mc;
+	float y = a.y * mc;
+	float z = a.z * mc;
+	float xy = x * a.y;
+	float xz = x * a.z;
+	float yz = y * a.z;
+
+	mat.m00 = c + x * a.x;
+	mat.m11 = c + y * a.y;
+	mat.m22 = c + z * a.z;
+
+	mat.m10 = xy + s * a.z;
+	mat.m20 = xz - s * a.y;
+
+	mat.m01 = xy - s * a.z;
+	mat.m21 = yz + s * a.x;
+
+	mat.m02 = xz + s * a.y;
+	mat.m12 = yz - s * a.x;
+
+	*this *= mat;
 	return *this;
 }
 
@@ -227,6 +271,14 @@ Matrix3 Matrix3::Rotate(const Quaternion &quat)
 	*this *= mat;
 
 	return *this;
+}
+
+bool Matrix3::operator==(const Matrix3 &second)
+{
+	for (int i = 0; i < 9; i++)
+		if (e[i] != second.e[i]) return false;
+
+	return true;
 }
 
 Matrix3 Matrix3::Multiply(const Matrix3 &first, const Matrix3 &second)
@@ -280,16 +332,58 @@ Matrix3 Matrix3::FromQuaternion(const Quaternion &quat)
 
 Quaternion Matrix3::ToQuaternion(const Matrix3 &mat)
 {
-	//---------TODO------------
-	Quaternion quat = Quaternion();
+	//---Algorithm from Foundations of Game Engine Development (pg 93), written differently---
+	//GETTING PRECISION PROBLEMS
 
-	quat.w = sqrt((1 + mat.e[0] + mat.e[4] + mat.e[8]) / 2);
-	float w4 = 4 * quat.w;
-	quat.x = (mat.e[5] - mat.e[7]) / w4;
-	quat.y = (mat.e[6] - mat.e[2]) / w4;
-	quat.z = (mat.e[1] - mat.e[3]) / w4;
+	//Check Determinant
+	float det = mat.GetDeterminant();
+	if (!(fabs(det - 1) < 0.0001f))  return Quaternion();
 
-	return Quaternion();
+	//Check Orthogonal (not working)
+	if (!mat.IsOtho()) return Quaternion();
+
+	//Get sum of diagonal
+	float sum = mat.m00 + mat.m11 + mat.m22;
+
+	Quaternion quat;
+	if (sum > 0)
+	{
+		//Positive diag
+		quat.w = sqrt(sum + 1) * 0.5f;
+		float f = 0.25f / quat.w;
+		quat.x = (mat.m21 - mat.m12) * f;
+		quat.y = (mat.m02 - mat.m20) * f;
+		quat.z = (mat.m10 - mat.m01) * f;
+	}
+	else if ((mat.m00 > mat.m11) && (mat.m00 > mat.m22))
+	{
+		//Top left is largest diag
+		quat.x = sqrt(mat.m00 - mat.m11 - mat.m22 + 1) * 0.5f;
+		float f = 0.25f / quat.x;
+		quat.y = (mat.m10 + mat.m01) * f;
+		quat.z = (mat.m02 + mat.m20) * f;
+		quat.w = (mat.m21 - mat.m12) * f;
+	}
+	else if (mat.m11 > mat.m22)
+	{
+		//M11 is the largest diag
+		quat.y = sqrt(mat.m00 - mat.m11 - mat.m22 + 1) * 0.5f;
+		float f = 0.25f / quat.y;
+		quat.x = (mat.m01 + mat.m10) * f;
+		quat.z = (mat.m21 + mat.m12) * f;
+		quat.w = (mat.m02 - mat.m20) * f;
+	}
+	else
+	{
+		//M22 is the largest diag
+		quat.z = sqrt(mat.m00 - mat.m11 - mat.m22 + 1) * 0.5f;
+		float f = 0.25f / quat.z;
+		quat.x = (mat.m20 + mat.m02) * f;
+		quat.y = (mat.m21 + mat.m12) * f;
+		quat.w = (mat.m10 - mat.m01) * f;
+	}
+
+	return quat;
 }
 
 std::ostream &operator<<(std::ostream &stream, const Matrix3 &mat)

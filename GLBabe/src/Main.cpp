@@ -28,13 +28,18 @@ int main()
 {
 	//MATH
 
-	Matrix3 mat = Matrix3();
-	mat.m12 = 3;
-	mat.m10 = 5;
-	mat.m00 = 2;
-	mat.m02 = 2;
+	Matrix3 rot = Matrix3();
+	rot.Rotate(Vector3(1, 0, 0), 90);
 
-	std::cout << mat * mat.Inverse() << std::endl;
+	std::cout << rot.GetDeterminant() << std::endl;
+
+	Quaternion r = Quaternion();
+	r.Rotate(Vector3(1, 0, 0), 90);
+
+	std::cout << rot << std::endl;
+	std::cout << r << std::endl;
+	r = Matrix3::ToQuaternion(rot);
+	std::cout << r << std::endl;
 
 	//END MATH
 

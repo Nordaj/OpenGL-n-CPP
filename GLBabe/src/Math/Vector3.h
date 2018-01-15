@@ -25,43 +25,43 @@ public:
 	Vector3(float X, float Y, float Z);
 
 	float Dot(const Vector3 &other);
-	float Magnitude();
+	float Magnitude() const;
 	float QMag();
 	void Normalize();
-	Vector3 Normalized();
+	Vector3 Normalized() const;
 	Vector3 Cross(const Vector3 &other);
 	float Distance(const Vector3 &other);
 
-	Vector3 Add(const Vector3 &other);
-	Vector3 operator+(const Vector3 &other);
+	Vector3 Add(const Vector3 &other) const;
+	Vector3 operator+(const Vector3 &other) const;
 	Vector3 operator+=(const Vector3 &other);
 
-	Vector3 Subtract(const Vector3 &other);
-	Vector3 operator-(const Vector3 &other);
+	Vector3 Subtract(const Vector3 &other) const;
+	Vector3 operator-(const Vector3 &other) const;
 	Vector3 operator-=(const Vector3 &other);
 
-	Vector3 Multiply(const Vector3 &other);
-	Vector3 operator*(const Vector3 &other);
+	Vector3 Multiply(const Vector3 &other) const;
+	Vector3 operator*(const Vector3 &other) const;
 	Vector3 operator*=(const Vector3 &other);
 
-	Vector3 Divide(const Vector3 &other);
-	Vector3 operator/(const Vector3 &other);
+	Vector3 Divide(const Vector3 &other) const;
+	Vector3 operator/(const Vector3 &other) const;
 	Vector3 operator/=(const Vector3 &other);
 
-	Vector3 Add(float value);
-	Vector3 operator+(float value);
+	Vector3 Add(float value) const;
+	Vector3 operator+(float value) const;
 	Vector3 operator+=(float value);
 
-	Vector3 Subtract(float value);
-	Vector3 operator-(float value);
+	Vector3 Subtract(float value) const;
+	Vector3 operator-(float value) const;
 	Vector3 operator-=(float value);
 
-	Vector3 Multiply(float value);
-	Vector3 operator*(float value);
+	Vector3 Multiply(float value) const;
+	Vector3 operator*(float value) const;
 	Vector3 operator*=(float value);
 
-	Vector3 Divide(float value);
-	Vector3 operator/(float value);
+	Vector3 Divide(float value) const;
+	Vector3 operator/(float value) const;
 	Vector3 operator/=(float value);
 
 	bool operator==(const Vector3 &other);

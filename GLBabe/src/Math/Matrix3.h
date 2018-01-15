@@ -37,6 +37,8 @@ public:
 	Matrix3 Invert();
 	Matrix3 Inverse() const;
 
+	bool IsOtho() const;
+
 	Matrix3 Multiply(const Matrix3 &other);
 	Matrix3 operator*(const Matrix3 &other) const;
 	Matrix3 operator*=(const Matrix3 &other);
@@ -47,6 +49,8 @@ public:
 
 	Matrix3 Rotate(const Vector3 &axis, float angle);
 	Matrix3 Rotate(const Quaternion &quat);
+
+	bool operator==(const Matrix3 &second);
 
 	static Matrix3 Multiply(const Matrix3 &first, const Matrix3 &second);
 	static Matrix3 Divide(const Matrix3 &first, float second);
