@@ -67,8 +67,29 @@ Matrix3::Matrix3(const Quaternion &quat)
 
 float Matrix3::GetDeterminant() const
 {
-	return (e[0] * e[4] * e[8]) + (e[3] * e[6] * e[2]) + (e[6] * e[1] * e[5]) - 
-		   (e[0] * e[7] * e[5]) - (e[3] * e[1] * e[8]) - (e[6] * e[4] * e[2]);
+	return m00 * (m11 * m22 - m12 * m21) + 
+		   m01 * (m12 * m20 - m10 * m22) + 
+		   m02 * (m10 * m21 - m11 * m20);
+}
+
+bool Matrix3::IsOtho() const
+{
+	Matrix3 m1 = Inverse();
+	Matrix3 m2 = GetTransposed();
+	return (m1 == m2);
+}
+
+Vector3 Matrix3::GetCollumn(int id) const
+{
+	//Input ranges from 0-2
+	int foo = id * 3;
+	return Vector3(e[foo], e[foo] + 1, e[foo] + 2);
+}
+
+Vector3 Matrix3::GetRow(int id) const
+{
+	//Input ranges from 0-2
+	return Vector3(e[id], e[id + 3], e[id + 6]);
 }
 
 Matrix3 Matrix3::Transpose()
@@ -144,47 +165,6 @@ Matrix3 Matrix3::Inverse() const
 
 	temp /= det;
 	return temp;
-}
-
-bool Matrix3::IsOtho() const
-{
-	Matrix3 mat = *this * Inverse();
-	bool x = (mat == Matrix3(1));
-	return ((*this * Inverse()) == Matrix3());
-}
-
-Matrix3 Matrix3::Multiply(const Matrix3 &other)
-{
-	*this = Multiply(*this, other);
-	return *this;
-}
-
-Matrix3 Matrix3::operator*(const Matrix3 &other) const
-{
-	return Multiply(*this, other);
-}
-
-Matrix3 Matrix3::operator*=(const Matrix3 &other)
-{
-	Multiply(other);
-	return *this;
-}
-
-Matrix3 Matrix3::Divide(float other)
-{
-	*this = Divide(*this, other);
-	return *this;
-}
-
-Matrix3 Matrix3::operator/(float other) const
-{
-	return Divide(*this, other);
-}
-
-Matrix3 Matrix3::operator/=(float other)
-{
-	*this = Divide(*this, other);
-	return *this;
 }
 
 Matrix3 Matrix3::Rotate(const Vector3 &axis, float angle)
@@ -273,10 +253,49 @@ Matrix3 Matrix3::Rotate(const Quaternion &quat)
 	return *this;
 }
 
+Quaternion Matrix3::ToQuaternion() const
+{
+	return ToQuaternion(*this);
+}
+
+Matrix3 Matrix3::Multiply(const Matrix3 &other)
+{
+	*this = Multiply(*this, other);
+	return *this;
+}
+
+Matrix3 Matrix3::operator*(const Matrix3 &other) const
+{
+	return Multiply(*this, other);
+}
+
+Matrix3 Matrix3::operator*=(const Matrix3 &other)
+{
+	Multiply(other);
+	return *this;
+}
+
+Matrix3 Matrix3::Divide(float other)
+{
+	*this = Divide(*this, other);
+	return *this;
+}
+
+Matrix3 Matrix3::operator/(float other) const
+{
+	return Divide(*this, other);
+}
+
+Matrix3 Matrix3::operator/=(float other)
+{
+	*this = Divide(*this, other);
+	return *this;
+}
+
 bool Matrix3::operator==(const Matrix3 &second)
 {
 	for (int i = 0; i < 9; i++)
-		if (e[i] != second.e[i]) return false;
+		if (!FComp(e[i], second.e[i])) return false;
 
 	return true;
 }
@@ -333,7 +352,6 @@ Matrix3 Matrix3::FromQuaternion(const Quaternion &quat)
 Quaternion Matrix3::ToQuaternion(const Matrix3 &mat)
 {
 	//---Algorithm from Foundations of Game Engine Development (pg 93), written differently---
-	//GETTING PRECISION PROBLEMS
 
 	//Check Determinant
 	float det = mat.GetDeterminant();
@@ -384,6 +402,92 @@ Quaternion Matrix3::ToQuaternion(const Matrix3 &mat)
 	}
 
 	return quat;
+}
+
+Matrix3 Matrix3::FromAxisAngle(const Vector3 &axis, float angle)
+{
+	Matrix3 mat = Matrix3();
+	Vector3 a = axis.Normalized();
+
+	angle = Radians(angle);
+
+	float c = cos(angle);
+	float s = sin(angle);
+	float mc = 1 - c;
+
+	float x = a.x * mc;
+	float y = a.y * mc;
+	float z = a.z * mc;
+	float xy = x * a.y;
+	float xz = x * a.z;
+	float yz = y * a.z;
+
+	mat.m00 = c + x * a.x;
+	mat.m11 = c + y * a.y;
+	mat.m22 = c + z * a.z;
+
+	mat.m10 = xy + s * a.z;
+	mat.m20 = xz - s * a.y;
+
+	mat.m01 = xy - s * a.z;
+	mat.m21 = yz + s * a.x;
+
+	mat.m02 = xz + s * a.y;
+	mat.m12 = yz - s * a.x;
+
+	return mat;
+}
+
+Matrix3 Matrix3::FromEuler(const Vector3 &euler)
+{
+	//http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
+
+	Matrix3 mat;
+
+	float sx = sin(Radians(euler.x)); //sb
+	float sy = sin(Radians(euler.y)); //sh
+	float sz = sin(Radians(euler.z)); //sa
+	float cx = cos(Radians(euler.x)); //cb
+	float cy = cos(Radians(euler.y)); //ch
+	float cz = cos(Radians(euler.z)); //ca
+
+	mat.m00 = cy * cz;
+	mat.m01 = -cy * sz * cx + sy * sx;
+	mat.m02 = cy * sz * sx + sy * cx;
+
+	mat.m10 = sz;
+	mat.m11 = cz * cx;
+	mat.m12 = -cz * sx;
+
+	mat.m20 = -sy * cz;
+	mat.m21 = sy * sz * cx + cy * sx;
+	mat.m22 = -sy * sz * sx + cy * cx;
+
+	return mat;
+
+	/*
+	Matrix3 rotX = Matrix3();
+	Matrix3 rotY = Matrix3();
+	Matrix3 rotZ = Matrix3();
+
+	rotX.m11 = cos(Radians(euler.x));
+	rotX.m12 = -sin(Radians(euler.x));
+	rotX.m21 = sin(Radians(euler.x));
+	rotX.m22 = cos(Radians(euler.x));
+
+	rotY.m00 = cos(Radians(euler.y));
+	rotY.m20 = -sin(Radians(euler.y));
+	rotY.m22 = cos(Radians(euler.y));
+	rotY.m02 = sin(Radians(euler.y));
+
+	rotZ.m00 = cos(Radians(euler.z));
+	rotZ.m10 = sin(Radians(euler.z));
+	rotZ.m11 = cos(Radians(euler.z));
+	rotZ.m01 = -sin(Radians(euler.z));
+
+	//I think this means X->Y->Z because matrix multiplication is backwards. (may be wrong)
+	return rotX * rotY * rotZ;
+	*/
 }
 
 std::ostream &operator<<(std::ostream &stream, const Matrix3 &mat)

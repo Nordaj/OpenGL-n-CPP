@@ -24,21 +24,34 @@ public:
 private:
 
 public:
+	//Constructors
 	Matrix3();
 	Matrix3(float diagonal);
 	Matrix3(const std::vector<float> &e);
 	Matrix3(const Quaternion &quat);
 
+	//Extra
 	float GetDeterminant() const;
+	bool IsOtho() const;
 
+	Vector3 GetCollumn(int id) const;
+	Vector3 GetRow(int id) const;
+
+	//Basic functions
 	Matrix3 Transpose();
 	Matrix3 GetTransposed() const;
 
 	Matrix3 Invert();
 	Matrix3 Inverse() const;
 
-	bool IsOtho() const;
+	//Relative functions
+	Matrix3 Rotate(const Vector3 &axis, float angle);
+	Matrix3 Rotate(const Quaternion &quat);
 
+	//Relative conversions
+	Quaternion ToQuaternion() const;
+
+	//Basic operations
 	Matrix3 Multiply(const Matrix3 &other);
 	Matrix3 operator*(const Matrix3 &other) const;
 	Matrix3 operator*=(const Matrix3 &other);
@@ -47,16 +60,19 @@ public:
 	Matrix3 operator/(float other) const;
 	Matrix3 operator/=(float other);
 
-	Matrix3 Rotate(const Vector3 &axis, float angle);
-	Matrix3 Rotate(const Quaternion &quat);
-
 	bool operator==(const Matrix3 &second);
 
+	//Static operations
 	static Matrix3 Multiply(const Matrix3 &first, const Matrix3 &second);
 	static Matrix3 Divide(const Matrix3 &first, float second);
+
+	//Static convertions
 	static Matrix3 FromQuaternion(const Quaternion &quat);
 	static Quaternion ToQuaternion(const Matrix3 &mat);
+	static Matrix3 FromAxisAngle(const Vector3 &axis, float angle);
+	static Matrix3 FromEuler(const Vector3 &euler);
 
+	//Friend
 	friend std::ostream &operator<<(std::ostream &stream, const Matrix3 &mat);
 };
 

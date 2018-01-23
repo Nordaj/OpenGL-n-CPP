@@ -28,18 +28,21 @@ int main()
 {
 	//MATH
 
-	Matrix3 rot = Matrix3();
-	rot.Rotate(Vector3(1, 0, 0), 90);
+	Matrix3 mat = Matrix3::FromEuler(Vector3(5, 45, 45));
+	//mat.Rotate(Vector3(0, 0, 1), 45);
+	//mat.Rotate(Vector3(0, 1, 0), 45);
 
-	std::cout << rot.GetDeterminant() << std::endl;
+	std::cout << mat.IsOtho() << std::endl;
 
-	Quaternion r = Quaternion();
-	r.Rotate(Vector3(1, 0, 0), 90);
+	Matrix3 mat2 = Matrix3();
+	mat2.Rotate(Vector3(0, 1, 0), 45);
+	mat2.Rotate(Vector3(0, 0, 1), 45);
+	//mat2.Rotate(Vector3(0, 0, 1), 90);
 
-	std::cout << rot << std::endl;
-	std::cout << r << std::endl;
-	r = Matrix3::ToQuaternion(rot);
-	std::cout << r << std::endl;
+	Quaternion q1 = mat.ToQuaternion();
+	Quaternion q2 = mat2.ToQuaternion();
+	std::cout << q1 << std::endl;
+	std::cout << q2 << std::endl;
 
 	//END MATH
 
