@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Quaternion.h"
+#include "Matrix4.h"
 
 class Matrix3 
 {
@@ -71,6 +72,7 @@ public:
 	static Quaternion ToQuaternion(const Matrix3 &mat);
 	static Matrix3 FromAxisAngle(const Vector3 &axis, float angle);
 	static Matrix3 FromEuler(const Vector3 &euler);
+	static Matrix4 ToMat4(const Matrix3 &mat);
 
 	//Friend
 	friend std::ostream &operator<<(std::ostream &stream, const Matrix3 &mat);
@@ -90,7 +92,7 @@ typedef Matrix3 RotationMatrix;
 	m10	m11	m12
 	m20	m21	m22
 
-	-first num = collumn, second = row
+	-first num = collumn, second = row (some website with head up ass)
 	m00	m10	m20
 	m01	m11	m21
 	m02	m12	m22

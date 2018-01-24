@@ -4,6 +4,7 @@
 
 #include "Misc.h"
 #include "Quaternion.h"
+#include "Matrix4.h"
 
 #include "Matrix3.h"
 
@@ -488,6 +489,25 @@ Matrix3 Matrix3::FromEuler(const Vector3 &euler)
 
 	//I think this means X->Y->Z because matrix multiplication is backwards. (may be wrong)
 	return rotX * rotY * rotZ;
+}
+
+Matrix4 Matrix3::ToMat4(const Matrix3 &mat)
+{
+	Matrix4 mat4 = Matrix4();
+
+	mat4.elements[0] = mat.e[0];
+	mat4.elements[1] = mat.e[1];
+	mat4.elements[2] = mat.e[2];
+
+	mat4.elements[4] = mat.e[3];
+	mat4.elements[5] = mat.e[4];
+	mat4.elements[6] = mat.e[5];
+
+	mat4.elements[8] = mat.e[6];
+	mat4.elements[9] = mat.e[7];
+	mat4.elements[10] = mat.e[8];
+
+	return mat4;
 }
 
 std::ostream &operator<<(std::ostream &stream, const Matrix3 &mat)
