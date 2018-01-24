@@ -169,7 +169,7 @@ Matrix3 Matrix3::Inverse() const
 
 Matrix3 Matrix3::Rotate(const Vector3 &axis, float angle)
 {
-	/* ---This method does not keep determinate as 1---
+	/*
 	Matrix3 mat = Matrix3();
 	Vector3 a = axis.Normalized();
 
@@ -442,6 +442,7 @@ Matrix3 Matrix3::FromEuler(const Vector3 &euler)
 {
 	//http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
 
+	/* ---big problems, I think accuracy---
 	Matrix3 mat;
 
 	float sx = sin(Radians(euler.x)); //sb
@@ -464,8 +465,8 @@ Matrix3 Matrix3::FromEuler(const Vector3 &euler)
 	mat.m22 = -sy * sz * sx + cy * cx;
 
 	return mat;
+	*/
 
-	/*
 	Matrix3 rotX = Matrix3();
 	Matrix3 rotY = Matrix3();
 	Matrix3 rotZ = Matrix3();
@@ -487,7 +488,6 @@ Matrix3 Matrix3::FromEuler(const Vector3 &euler)
 
 	//I think this means X->Y->Z because matrix multiplication is backwards. (may be wrong)
 	return rotX * rotY * rotZ;
-	*/
 }
 
 std::ostream &operator<<(std::ostream &stream, const Matrix3 &mat)

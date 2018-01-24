@@ -29,15 +29,13 @@ int main()
 	//MATH
 
 	Matrix3 mat = Matrix3::FromEuler(Vector3(5, 45, 45));
-	//mat.Rotate(Vector3(0, 0, 1), 45);
-	//mat.Rotate(Vector3(0, 1, 0), 45);
-
-	std::cout << mat.IsOtho() << std::endl;
+	std::cout << mat << std::endl;
 
 	Matrix3 mat2 = Matrix3();
+	mat2.Rotate(Vector3(1, 0, 0), 5);
 	mat2.Rotate(Vector3(0, 1, 0), 45);
 	mat2.Rotate(Vector3(0, 0, 1), 45);
-	//mat2.Rotate(Vector3(0, 0, 1), 90);
+	std::cout << mat2 << std::endl;;
 
 	Quaternion q1 = mat.ToQuaternion();
 	Quaternion q2 = mat2.ToQuaternion();
