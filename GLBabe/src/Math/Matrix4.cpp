@@ -195,7 +195,16 @@ Matrix4 Matrix4::operator*=(const Matrix4 &other)
 	return *this;
 }
 
-//TODO: Make relative
+Vector3 Matrix4::Multiply(const Vector3 &v) const
+{
+	return Multiply(v, *this);
+}
+
+Vector3 Matrix4::operator*(const Vector3 &v) const
+{
+	return Multiply(v, *this);
+}
+
 Matrix4 Matrix4::Translate(const Vector3 &translation)
 {
 	Matrix4 mat = Matrix4(1);
@@ -209,7 +218,6 @@ Matrix4 Matrix4::Translate(const Vector3 &translation)
 	return *this;
 }
 
-//TODO: Make relative
 Matrix4 Matrix4::Rotate(const Vector3 &axis, float angle)
 {
 	//MIGHT NOT WORK
@@ -240,7 +248,6 @@ Matrix4 Matrix4::Rotate(const Vector3 &axis, float angle)
 	return *this;
 }
 
-//TODO: Make relative
 Matrix4 Matrix4::Rotate(Quaternion &quat)
 {
 	Matrix4 mat = Matrix4(1);
@@ -264,7 +271,6 @@ Matrix4 Matrix4::Rotate(Quaternion &quat)
 	return *this;
 }
 
-//TODO: Make relative
 Matrix4 Matrix4::Scale(const Vector3 &scale)
 {
 	Matrix4 mat = Matrix4(1);
@@ -317,6 +323,15 @@ Matrix4 Matrix4::Perspective(float fov, float aspect, float near, float far)
 	mat.elements[11] = -1;
 
 	return mat;
+}
+
+Vector3 Matrix4::Multiply(const Vector3 &v, const Matrix4 &m)
+{
+	return Vector3(
+		(v.x * m.elements[0]) + (v.y * m.elements[4]) + (v.z * m.elements[8]) + m.elements[12],
+		(v.x * m.elements[1]) + (v.y * m.elements[5]) + (v.z * m.elements[9]) + m.elements[13],
+		(v.x * m.elements[2]) + (v.y * m.elements[6]) + (v.z * m.elements[10]) + m.elements[14]
+	);
 }
 
 std::ostream &operator<<(std::ostream &stream, const Matrix4 &mat)

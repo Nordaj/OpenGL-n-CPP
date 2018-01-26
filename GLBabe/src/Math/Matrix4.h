@@ -35,6 +35,9 @@ public:
 	Matrix4 operator*(const Matrix4 &other);
 	Matrix4 operator*=(const Matrix4 &other);
 
+	Vector3 Multiply(const Vector3 &v) const;
+	Vector3 operator*(const Vector3 &v) const;
+
 	Matrix4 Translate(const Vector3 &translation);
 	Matrix4 Rotate(const Vector3 &axis, float angle);
 	Matrix4 Rotate(Quaternion &quat);
@@ -43,6 +46,7 @@ public:
 	static Matrix4 TRS(Vector3 &translation, Quaternion &rotation, Vector3 &scale);
 	static Matrix4 Orthagraphic(float right, float left, float top, float bottom, float near, float far);
 	static Matrix4 Perspective(float fov, float aspect, float near, float far);
+	static Vector3 Multiply(const Vector3 &v, const Matrix4 &m);
 
 	friend std::ostream &operator<<(std::ostream &stream, const Matrix4 &mat);
 };
