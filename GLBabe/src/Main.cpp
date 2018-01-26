@@ -35,7 +35,7 @@ int main()
 	mat2.Rotate(Vector3(1, 0, 0), 5);
 	mat2.Rotate(Vector3(0, 1, 0), 45);
 	mat2.Rotate(Vector3(0, 0, 1), 45);
-	std::cout << mat2 << std::endl;;
+	std::cout << mat2 << std::endl;
 
 	Quaternion q1 = mat.ToQuaternion();
 	Quaternion q2 = mat2.ToQuaternion();
@@ -44,8 +44,8 @@ int main()
 
 	//END MATH
 
-	std::cin.get();
-	std::cin.get();
+	//std::cin.get();
+	//std::cin.get();
 	//return 0;
 
 	//Setup Game

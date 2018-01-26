@@ -301,6 +301,16 @@ bool Matrix3::operator==(const Matrix3 &second)
 	return true;
 }
 
+Vector3 Matrix3::Multiply(const Vector3 &v) const
+{
+	return Multiply(v, *this);
+}
+
+Vector3 Matrix3::operator*(const Vector3 &v) const
+{
+	return Multiply(v, *this);
+}
+
 Matrix3 Matrix3::Multiply(const Matrix3 &first, const Matrix3 &second)
 {
 	Matrix3 mat = Matrix3();
@@ -328,6 +338,15 @@ Matrix3 Matrix3::Divide(const Matrix3 &first, float second)
 		temp.e[i] = first.e[i] / second;
 
 	return temp;
+}
+
+Vector3 Matrix3::Multiply(const Vector3 &v, const Matrix3 &m)
+{
+	return Vector3(
+		(m.m00 * v.x) + (m.m01 * v.y) + (m.m02 * v.z),
+		(m.m10 * v.x) + (m.m11 * v.y) + (m.m12 * v.z),
+		(m.m20 * v.x) + (m.m21 * v.y) + (m.m22 * v.z)
+	);
 }
 
 Matrix3 Matrix3::FromQuaternion(const Quaternion &quat)

@@ -61,11 +61,15 @@ public:
 	Matrix3 operator/(float other) const;
 	Matrix3 operator/=(float other);
 
+	Vector3 Multiply(const Vector3 &v) const;
+	Vector3 operator*(const Vector3 &v) const;
+
 	bool operator==(const Matrix3 &second);
 
 	//Static operations
 	static Matrix3 Multiply(const Matrix3 &first, const Matrix3 &second);
 	static Matrix3 Divide(const Matrix3 &first, float second);
+	static Vector3 Multiply(const Vector3 &v, const Matrix3 &m);
 
 	//Static convertions
 	static Matrix3 FromQuaternion(const Quaternion &quat);
